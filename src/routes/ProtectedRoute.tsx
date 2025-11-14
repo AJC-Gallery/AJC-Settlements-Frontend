@@ -1,31 +1,41 @@
-import React from 'react';
+// src/routes/ProtectedRoute.tsx
+
 import { Navigate, useLocation } from 'react-router-dom';
-// import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useCurrentUser } from '@/hooks';
 import { Spinner } from '@/components/ui/spinner';
-import { useAuth } from '@/features/auth';
-// import { Loading } from '@/components/common/Loading';
+// import { Loading } from '@/components/common';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
+/**
+ * Protected Route Component
+ * 
+ * Wraps routes that require authentication
+ * - Shows loading state while checking auth
+ * - Redirects to login if not authenticated
+ * - Renders children if authenticated
+ */
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
+  const { data: user, isLoading, isError } = useCurrentUser();
 
-  // Show loading while checking authentication
+  // Show loading spinner while checking authentication
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Spinner />
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner size="lg" />
       </div>
     );
   }
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated) {
+  // If error or no user, redirect to login
+  if (isError || !user) {
+    // Save the attempted location for redirect after login
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // User is authenticated, render the protected content
   return <>{children}</>;
 };

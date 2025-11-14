@@ -1,7 +1,7 @@
+// src/pages/SignInPage.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SignInForm } from '../features/auth/components';
-// import { SignInForm } from '../components/SignInForm';
 
 export const SignInPage: React.FC = () => {
   const navigate = useNavigate();

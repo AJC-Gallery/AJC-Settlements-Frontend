@@ -1,79 +1,57 @@
+// src/routes/appRoutes.tsx
+
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthGuard } from '../features/auth';
-import { HomePage } from '@/pages/HomePage';
-import Dashboard from '@/pages/DashboardPage';
-import { AppLayout } from '@/layouts/appLayout';
-import { AuthLayout } from '@/layouts/authLayout';
+import { ProtectedRoute } from './ProtectedRoute';
+// import { AppLayout, AuthLayout } from '@/layouts';
+
+ 
+   
+import {  LandingPage } from '@/pages/LandingPage';
 import { SignInPage } from '@/pages/LoginPage';
 import { SignUpPage } from '@/pages/RegisterPage';
-import { ProtectedRoute } from './ProtectedRoute';
-// import AppLayout from '@/layouts/appLayout';
+import DashboardPage from '@/pages/DashboardPage';
+import ProfilePage from '@/pages/ProfilePage';
+import SettingsPage from '@/pages/SettingsPage';
+import SettlementsPage from '@/pages/SettlementsPage';
+import OrganizationsPage from '@/pages/OrganizationsPage';
+import OccupantsPage from '@/pages/OccupantsPage';
+import RevenuePage from '@/pages/RevenuePage';
+import ContactInfoPage from '@/pages/ContactInfoPage';
+import NotFoundPage from '@/pages/NotFoundPage';
+import { AuthLayout } from '@/layouts/AuthLayout';
+import { AppLayout } from '@/layouts/AppLayout';
 
 export const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public Home Route */}
-      <Route path="/" element={<HomePage />} />
-      
-      {/* Auth Routes */}
-      <Route 
-        path="/login" 
-        element={
-          <AuthGuard redirectTo="/dashboard">
-            <AuthLayout>
-              <SignInPage />
-            </AuthLayout>
-          </AuthGuard>
-        } 
-      />
-      
-      <Route 
-        path="/register" 
-        element={
-          <AuthGuard redirectTo="/dashboard">
-            <AuthLayout>
-              <SignUpPage />
-            </AuthLayout>
-          </AuthGuard>
-        } 
-      />
-      
-      {/* Protected Routes */}
-      <Route 
-        path="/dashboard" 
+      {/* Public Routes (Auth Layout) */}
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<SignInPage />} />
+        <Route path="/register" element={<SignUpPage />} />
+      </Route>
+
+      {/* Protected Routes (App Layout) */}
+      <Route
         element={
           <ProtectedRoute>
-            <AppLayout>
-              <Dashboard />
-            </AppLayout>
+            <AppLayout />
           </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path="/profile" 
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <div>Profile Page</div>
-            </AppLayout>
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path="/settings" 
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <div>Settings Page</div>
-            </AppLayout>
-          </ProtectedRoute>
-        } 
-      />
-      
-      {/* Catch all route */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+        }
+      >
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/settlements" element={<SettlementsPage />} />
+        <Route path="/organizations" element={<OrganizationsPage />} />
+        <Route path="/occupants" element={<OccupantsPage />} />
+        <Route path="/revenue" element={<RevenuePage />} />
+        <Route path="/contact-info" element={<ContactInfoPage />} />
+      </Route>
+
+      {/* Catch-all redirect */}
+      <Route path="/404" element={<NotFoundPage />} />
+      <Route path="*" element={<Navigate to="/404" replace />} />
     </Routes>
   );
 };
