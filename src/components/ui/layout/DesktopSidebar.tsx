@@ -26,16 +26,16 @@ export const DesktopSidebar = ({
   isActive,
 }: DesktopSidebarProps) => {
   return (
-    <aside
-      className={`hidden md:block mt-4 lg:mt-16 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl rounded-[32px] lg:rounded-[48px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-500 ease-in-out z-50 ${
+     <aside
+      className={`hidden md:block fixed top-1/2 -translate-y-1/2 left-4 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl rounded-[32px] lg:rounded-[48px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-500 ease-in-out z-50 max-h-[min(85vh,650px)]   ${
         isSidebarExpanded ? "w-64" : "w-20"
       }`}
       onMouseEnter={() => setIsSidebarExpanded(true)}
       onMouseLeave={() => setIsSidebarExpanded(false)}
     >
-      <div className="h-full flex flex-col">
+      <div className="h-full flex flex-col py-4">
         {/* Logo Section */}
-        <div
+         <div
           className={`flex items-center mb-2 mt-4 lg:mt-6 transition-all duration-500 ${
             isSidebarExpanded ? "justify-start px-4" : "justify-center"
           }`}
@@ -48,6 +48,7 @@ export const DesktopSidebar = ({
             />
           </div>
         </div>
+
         {/* Menu Items */}
         <nav
           className={`flex-1 space-y-2 transition-all duration-500 ${
@@ -106,8 +107,10 @@ export const DesktopSidebar = ({
               )}
             </button>
           ))}
+
           {/* Divider */}
           <div className="h-px bg-white/10 my-4" />
+
           {/* Bottom Items */}
           {bottomItems.map((item, index) => (
             <button
@@ -132,10 +135,11 @@ export const DesktopSidebar = ({
             </button>
           ))}
         </nav>
+
         {/* User Profile */}
         <div
           className={`transition-all duration-500 ${
-            isSidebarExpanded ? "px-4 pb-4" : "px-2 pb-4"
+            isSidebarExpanded ? "px-4" : "px-2"
           }`}
         >
           <button
