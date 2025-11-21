@@ -1,11 +1,12 @@
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import Logo from "@/assets/logo2.png";
+import { UserButton } from "@/components/common/UserButton";
 
 interface MenuItem {
   icon: LucideIcon;
   label: string;
   path: string;
-  badge?: boolean;
+  // badge?: boolean;
 }
 
 interface DesktopSidebarProps {
@@ -26,7 +27,7 @@ export const DesktopSidebar = ({
   isActive,
 }: DesktopSidebarProps) => {
   return (
-     <aside
+    <aside
       className={`hidden md:block fixed top-1/2 -translate-y-1/2 left-4 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl rounded-[32px] lg:rounded-[48px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-500 ease-in-out z-50 max-h-[min(85vh,650px)]   ${
         isSidebarExpanded ? "w-64" : "w-20"
       }`}
@@ -35,7 +36,7 @@ export const DesktopSidebar = ({
     >
       <div className="h-full flex flex-col py-4">
         {/* Logo Section */}
-         <div
+        <div
           className={`flex items-center mb-2 mt-4 lg:mt-6 transition-all duration-500 ${
             isSidebarExpanded ? "justify-start px-4" : "justify-center"
           }`}
@@ -73,7 +74,7 @@ export const DesktopSidebar = ({
                   : "justify-center py-3"
               } ${
                 isActive(item.path)
-                  ? "bg-white/20 text-white shadow-lg"
+                  ? "bg-white/20 text-white pl-5 shadow-lg"
                   : "text-white/70 hover:bg-white/10 hover:text-white"
               }`}
               onClick={() => handleNavigation(item.path)}
@@ -88,13 +89,13 @@ export const DesktopSidebar = ({
               >
                 {item.label}
               </span>
-              {item.badge && (
+              {/* {item.badge && (
                 <div
                   className={`ml-auto w-2 h-2 bg-white rounded-full transition-all duration-500 ${
                     isSidebarExpanded ? "opacity-100" : "opacity-0"
                   }`}
                 />
-              )}
+              )} */}
               {isActive(item.path) && (
                 <ChevronRight
                   className={`ml-auto w-4 h-4 transition-all duration-500 ${
@@ -142,7 +143,7 @@ export const DesktopSidebar = ({
             isSidebarExpanded ? "px-4" : "px-2"
           }`}
         >
-          <button
+          {/* <button
             className={`w-full flex items-center rounded-xl hover:bg-white/10 transition-all duration-500 ${
               isSidebarExpanded
                 ? "gap-3 px-3 py-3 justify-start"
@@ -171,7 +172,9 @@ export const DesktopSidebar = ({
                 isSidebarExpanded ? "opacity-100" : "opacity-0 w-0"
               }`}
             />
-          </button>
+          </button> */}
+
+          <UserButton />
         </div>
       </div>
     </aside>

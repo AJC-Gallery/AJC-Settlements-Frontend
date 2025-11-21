@@ -21,7 +21,7 @@ export default function RevenueCard({ revenue }: RevenueCardProps) {
         slidesPerView={1}
         spaceBetween={10}
         autoplay={{
-          delay: 3500,
+          delay: 3000,
           disableOnInteraction: false,
         }}
         pagination={{ clickable: true }}

@@ -12,7 +12,8 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { DesktopHeader, MobileHeader } from "@/components/ui/layout/Header";
 import { MobileMenu } from "@/components/ui/layout/MobileMenu";
 import { DesktopSidebar } from "@/components/ui/layout/DesktopSidebar";
- 
+ import { useLogout } from "@/hooks/useAuth";
+
 interface AppLayoutProps {
   children?: ReactNode;
 }
@@ -29,16 +30,24 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
     { icon: Users, label: "Occupants", path: "/occupants" },
     { icon: DollarSign, label: "Revenue", badge: true, path: "/revenue" },
   ];
-  
+  const { mutate: logout } = useLogout();
+
   const bottomItems = [
     { icon: Settings, label: "Settings", path: "/settings" },
     { icon: LogOut, label: "Log out", path: "/logout" },
   ];
   
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    setIsMobileMenuOpen(false);
-  };
+ const handleNavigation = (path: string) => {
+  if (path === "/logout") {
+    logout(); // <-- trigger logout hook
+    navigate("/login"); // redirect user after logout
+    return;
+  }
+
+  navigate(path);
+  setIsMobileMenuOpen(false);
+};
+
   
   const isActive = (path: string) => {
     return location.pathname === path;

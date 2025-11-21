@@ -19,36 +19,56 @@ interface SettlementsCardProps {
 export default function SettlementsCard({ settlements }: SettlementsCardProps) {
   return (
     <div className="h-full">
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
-        effect="coverflow"
-        grabCursor={true}
-        centeredSlides={true}
-        loop={true}
-        slidesPerView={1}
-        coverflowEffect={{
-          rotate: 20,
-          stretch: 0,
-          depth: 100,
-          modifier: 1,
-          slideShadows: true,
-        }}
-        autoplay={{
-          delay: 4000,
-          disableOnInteraction: false,
-        }}
-        navigation
-        pagination={{ clickable: true }}
-        breakpoints={{
-          640: {
-            slidesPerView: 1,
-          },
-          1024: {
-            slidesPerView: 2,
-          },
-        }}
-        className="settlements-swiper h-full"
-      >
+     <Swiper
+  modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
+  effect="coverflow"
+  grabCursor={true}
+  centeredSlides={true}
+  loop={true}
+  slidesPerView={2}     // <— Important for dynamic datasets
+  spaceBetween={20}        // <— Extra spacing helps large images
+  coverflowEffect={{
+    rotate: 15,
+    stretch: 0,
+    depth: 200,
+    modifier: 1.5,         // <— More dramatic center focus
+    slideShadows: false,   // <— Keeps UI cleaner
+  }}
+  autoplay={{
+    delay: 3500,
+    disableOnInteraction: false,
+  }}
+  navigation
+  pagination={{ clickable: true }}
+  breakpoints={{
+    0: {
+      slidesPerView: 1,
+      spaceBetween: 12,
+    },
+    480: {
+      slidesPerView: 1.2,
+      spaceBetween: 14,
+    },
+    640: {
+      slidesPerView: 1.4,
+      spaceBetween: 16,
+    },
+    768: {
+      slidesPerView: 1.6,
+      spaceBetween: 18,
+    },
+    1024: {
+      slidesPerView: 2,
+      spaceBetween: 20,
+    },
+    1440: {
+      slidesPerView: 2.3,
+      spaceBetween: 24,
+    },
+  }}
+  className="settlements-swiper h-full"
+>
+
         {settlements.map((s, i) => (
           <SwiperSlide key={i}>
             <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl md:rounded-2xl flex flex-col h-full shadow-xl">

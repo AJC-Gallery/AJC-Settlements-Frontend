@@ -1,12 +1,7 @@
 // src/routes/appRoutes.tsx
-
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
-// import { AppLayout, AuthLayout } from '@/layouts';
-
- 
-   
-import {  LandingPage } from '@/pages/LandingPage';
+import { LandingPage } from '@/pages/LandingPage';
 import { SignInPage } from '@/pages/LoginPage';
 import { SignUpPage } from '@/pages/RegisterPage';
 import DashboardPage from '@/pages/DashboardPage';
@@ -19,13 +14,15 @@ import RevenuePage from '@/pages/RevenuePage';
 import ContactInfoPage from '@/pages/ContactInfoPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import { AuthLayout } from '@/layouts/AuthLayout';
-import { AppLayout } from '@/layouts/AppLayout';
+import SingleSettlementsPage from '@/features/settlements/pages/SingleSettlementsPage';
+import { AppLayout } from '@/layouts/appLayout';
 
 export const AppRoutes = () => {
   return (
     <Routes>
       {/* Public Routes (Auth Layout) */}
       <Route element={<AuthLayout />}>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<SignInPage />} />
         <Route path="/register" element={<SignUpPage />} />
       </Route>
@@ -35,18 +32,21 @@ export const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <AppLayout />
-          </ProtectedRoute>
+           </ProtectedRoute>
         }
       >
-        <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        
+        {/* Settlements Routes */}
         <Route path="/settlements" element={<SettlementsPage />} />
+        <Route path="/settlements/:id" element={<SingleSettlementsPage />} />
+        
         <Route path="/organizations" element={<OrganizationsPage />} />
         <Route path="/occupants" element={<OccupantsPage />} />
         <Route path="/revenue" element={<RevenuePage />} />
-        <Route path="/contact-info" element={<ContactInfoPage />} />
+        <Route path="/contact" element={<ContactInfoPage />} />
       </Route>
 
       {/* Catch-all redirect */}
