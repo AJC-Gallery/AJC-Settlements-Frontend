@@ -13,9 +13,9 @@ import OccupantsPage from '@/pages/OccupantsPage';
 import RevenuePage from '@/pages/RevenuePage';
 import ContactInfoPage from '@/pages/ContactInfoPage';
 import NotFoundPage from '@/pages/NotFoundPage';
-import { AuthLayout } from '@/layouts/AuthLayout';
-import SingleSettlementsPage from '@/features/settlements/pages/SingleSettlementsPage';
+ import SingleSettlementsPage from '@/features/settlements/pages/SingleSettlementsPage';
 import { AppLayout } from '@/layouts/appLayout';
+import { AuthLayout } from '@/layouts/authLayout';
 
 export const AppRoutes = () => {
   return (
