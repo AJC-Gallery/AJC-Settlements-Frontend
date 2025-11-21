@@ -5,7 +5,6 @@ export interface Settlement {
   image: string;
   occupants: number;
 }
-
 export interface Occupant {
   name: string;
   house: string;
@@ -14,25 +13,23 @@ export interface Occupant {
   image: string;
   paymentStatus: "healthy" | "faulty" | "critical";
 }
-
 export interface Revenue {
   month: string;
   amountCollected: number;
   totalExpected: number;
 }
-
 // Settlements data
 export const settlements: Settlement[] = [
-  { name: "Sunset Villas", location: "Lagos", image: "https://www.villaafrika.com/wp-content/uploads/2019/11/flats-nigeria.jpg", occupants: 5 },
-  { name: "Green Acres", location: "Abuja", image: "https://www.villaafrika.com/wp-content/uploads/2019/11/detached-house-nigeria.jpg", occupants: 3 },
-  { name: "Palm Residency", location: "Port Harcourt", image: "https://nigerianhouseplans.com/wp-content/uploads/2023/10/3101-v2-copy.jpg", occupants: 6 },
-  { name: "Ocean View", location: "Calabar", image: "https://www.villaafrika.com/wp-content/uploads/2019/11/homes-in-nigeria.jpg", occupants: 4 },
-  { name: "Maple Heights", location: "Kaduna", image: "https://www.tolet.com.ng/blog/wp-content/uploads/2017/04/duplex.jpg", occupants: 8 },
-  { name: "Sunrise Court", location: "Ibadan", image: "https://www.aljazeera.com/wp-content/uploads/2020/06/d391b019d85048829a2b76033853defc_18.jpeg?quality=80&quality=80", occupants: 2 },
-  { name: "Riverfront Estate", location: "Enugu", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvIW-spu0EMZf93KVvUZmkDwYcCsugZhnb2q224CA3DPIKjU7Cwth0MoSsXeaAAhehNUk&usqp=CAU", occupants: 7 },
-  { name: "Crystal Park", location: "Jos", image: "https://images.nigeriapropertycentre.com/properties/images/3167691/0690c6a867807b-3-bedroom-eco-bungalow-bq-n3m-deposit-detached-bungalows-for-sale-lekki-ibeju-lagos.jpg", occupants: 3 },
-  { name: "Hilltop Villas", location: "Uyo", image: "https://peteroz.com.ng/wp-content/uploads/2022/11/update.png", occupants: 5 },
-  { name: "Skyline Apartments", location: "Benin City", image: "https://nigerianhouseplans.com/wp-content/uploads/2018/02/nigerian-house-plans-5021.3.jpg", occupants: 4 },
+  { name: "Sunset Villas", location: "Lagos", image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800", occupants: 5 },
+  { name: "Green Acres", location: "Abuja", image: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800", occupants: 3 },
+  { name: "Palm Residency", location: "Port Harcourt", image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800", occupants: 6 },
+  { name: "Ocean View", location: "Calabar", image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800", occupants: 4 },
+  { name: "Maple Heights", location: "Kaduna", image: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800", occupants: 8 },
+  { name: "Sunrise Court", location: "Ibadan", image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800", occupants: 2 },
+  { name: "Riverfront Estate", location: "Enugu", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800", occupants: 7 },
+  { name: "Crystal Park", location: "Jos", image: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800", occupants: 3 },
+  { name: "Hilltop Villas", location: "Uyo", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800", occupants: 5 },
+  { name: "Skyline Apartments", location: "Benin City", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800", occupants: 4 },
 ];
 // Occupants data (Nigerian Names + African Avatars)
 export const occupants: Occupant[] = [
@@ -117,8 +114,6 @@ export const occupants: Occupant[] = [
     paymentStatus: "healthy" 
   }
 ];
-
-
 // Revenue data
 export const revenue: Revenue[] = [
   { month: "Jan", amountCollected: 350000, totalExpected: 400000 },
