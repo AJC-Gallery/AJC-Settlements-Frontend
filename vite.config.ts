@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
 import { resolve } from 'path'
 
-export default defineConfig(({  mode }) => {
+export default defineConfig(({ mode }) => {
   // Load env file based on mode
   const env = loadEnv(mode, process.cwd(), '')
   
@@ -21,6 +21,11 @@ export default defineConfig(({  mode }) => {
       port: 5173,
       open: true,
       host: true,
+      // Add allowed hosts configuration
+      allowedHosts: [
+        'ajc-settlements-frontend.onrender.com',
+        '.onrender.com', // This allows all Render subdomains
+      ],
     },
     
     // Build configuration
@@ -42,10 +47,15 @@ export default defineConfig(({  mode }) => {
     preview: {
       port: 4173,
       host: true,
+      // Also add for preview mode
+      allowedHosts: [
+        'ajc-settlements-frontend.onrender.com',
+        '.onrender.com',
+      ],
     },
     
-// Define environment variables
-define: {
+    // Define environment variables
+    define: {
       __APP_ENV__: JSON.stringify(env.VITE_APP_ENV),
     },
   }
