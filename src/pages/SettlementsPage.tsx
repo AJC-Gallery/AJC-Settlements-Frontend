@@ -12,7 +12,7 @@ const SettlementAssetsTab = lazy(
 );
 
 const SettlementsPage = () => {
-  const [activeTab, setActiveTab] = useState("collections");
+  const [activeTab, setActiveTab] = useState("assets");
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   return (
