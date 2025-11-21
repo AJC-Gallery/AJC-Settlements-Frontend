@@ -44,8 +44,8 @@ export default defineConfig(({  mode }) => {
       host: true,
     },
     
-    // Define environment variables
-    define: {
+// Define environment variables
+define: {
       __APP_ENV__: JSON.stringify(env.VITE_APP_ENV),
     },
   }
