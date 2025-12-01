@@ -2,3 +2,4 @@
 
 export * from './authEndpoints';
 export * from './dashboardEndpoints';
+export * from './assetEndpoints';

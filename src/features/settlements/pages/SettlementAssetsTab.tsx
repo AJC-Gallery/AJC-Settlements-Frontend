@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { RegisterAssetForm } from "../components/forms/RegisterAssetForm";
 import CustomGlassButton from "@/components/ui/custom-button";
 import { Home, Search, X, ChevronDown } from "lucide-react";
 import {
@@ -14,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 
 const SettlementAssetsTab = () => {
   const test = "0";
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
@@ -366,7 +364,7 @@ const SettlementAssetsTab = () => {
                 </p>
               )}
               <CustomGlassButton
-                onClick={() => setIsFormOpen(true)}
+                // onClick={() => setIsFormOpen(true)}
                 size="md"
                 variant="solid"
                 icon={<Home />}
@@ -378,10 +376,10 @@ const SettlementAssetsTab = () => {
         </div>
       </div>
 
-      <RegisterAssetForm
+      {/* <RegisterAssetForm
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-      />
+      /> */}
     </div>
   );
 };
