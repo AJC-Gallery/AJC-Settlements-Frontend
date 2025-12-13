@@ -1,7 +1,7 @@
 // src/hooks/useAssets.ts
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { assetsService } from '@/api/service';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { assetsService } from "@/api/service";
 import type {
   AssetCategory,
   CreateAssetCategoryDto,
@@ -11,31 +11,35 @@ import type {
   AssetFilters,
   CreateMaintenanceDto,
   UpdateMaintenanceDto,
-} from '@/features/settlements/types';
+} from "@/features/settlements/types";
 
 /**
  * Query Keys for Assets
  */
 export const ASSETS_QUERY_KEYS = {
   // Categories
-  categories: ['assets', 'categories'] as const,
-  category: (id: string) => ['assets', 'categories', id] as const,
+  categories: ["assets", "categories"] as const,
+  category: (id: string) => ["assets", "categories", id] as const,
 
   // Assets
-  assets: (filters?: AssetFilters) => ['assets', 'list', filters] as const,
-  asset: (id: string) => ['assets', 'detail', id] as const,
-  assetStats: ['assets', 'stats'] as const,
+  assets: (filters?: AssetFilters) => ["assets", "list", filters] as const,
+  myAssets: (filters?: AssetFilters) =>
+    ["assets", "my-assets", filters] as const, // ✅ NEW
+
+  asset: (id: string) => ["assets", "detail", id] as const,
+  assetStats: ["assets", "stats"] as const,
 
   // Images
-  assetImages: (assetId: string) => ['assets', assetId, 'images'] as const,
+  assetImages: (assetId: string) => ["assets", assetId, "images"] as const,
 
   // Maintenance
-  maintenance: (assetId: string) => ['assets', assetId, 'maintenance'] as const,
+  maintenance: (assetId: string) => ["assets", assetId, "maintenance"] as const,
   maintenanceRecord: (assetId: string, maintenanceId: string) =>
-    ['assets', assetId, 'maintenance', maintenanceId] as const,
-  upcomingMaintenance: (days?: number) => ['maintenance', 'upcoming', days] as const,
-  overdueMaintenance: ['maintenance', 'overdue'] as const,
-  maintenanceStats: ['maintenance', 'stats'] as const,
+    ["assets", assetId, "maintenance", maintenanceId] as const,
+  upcomingMaintenance: (days?: number) =>
+    ["maintenance", "upcoming", days] as const,
+  overdueMaintenance: ["maintenance", "overdue"] as const,
+  maintenanceStats: ["maintenance", "stats"] as const,
 };
 
 // ============================================================
@@ -71,13 +75,14 @@ export const useCreateCategory = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateAssetCategoryDto) => assetsService.createCategory(data),
+    mutationFn: (data: CreateAssetCategoryDto) =>
+      assetsService.createCategory(data),
     onSuccess: (category: AssetCategory) => {
-      console.log('✅ Category created successfully:', category);
+      console.log("✅ Category created successfully:", category);
       queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.categories });
     },
     onError: (error: { message: string }) => {
-      console.error('❌ Failed to create category:', error.message);
+      console.error("❌ Failed to create category:", error.message);
     },
   });
 };
@@ -92,12 +97,14 @@ export const useUpdateCategory = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateAssetCategoryDto }) =>
       assetsService.updateCategory(id, data),
     onSuccess: (category: AssetCategory, variables) => {
-      console.log('✅ Category updated successfully:', category);
+      console.log("✅ Category updated successfully:", category);
       queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.categories });
-      queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.category(variables.id) });
+      queryClient.invalidateQueries({
+        queryKey: ASSETS_QUERY_KEYS.category(variables.id),
+      });
     },
     onError: (error: { message: string }) => {
-      console.error('❌ Failed to update category:', error.message);
+      console.error("❌ Failed to update category:", error.message);
     },
   });
 };
@@ -111,11 +118,11 @@ export const useDeleteCategory = () => {
   return useMutation({
     mutationFn: (id: string) => assetsService.deleteCategory(id),
     onSuccess: () => {
-      console.log('✅ Category deleted successfully');
+      console.log("✅ Category deleted successfully");
       queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.categories });
     },
     onError: (error: { message: string }) => {
-      console.error('❌ Failed to delete category:', error.message);
+      console.error("❌ Failed to delete category:", error.message);
     },
   });
 };
@@ -129,11 +136,11 @@ export const useRestoreCategory = () => {
   return useMutation({
     mutationFn: (id: string) => assetsService.restoreCategory(id),
     onSuccess: (category: AssetCategory) => {
-      console.log('✅ Category restored successfully:', category);
+      console.log("✅ Category restored successfully:", category);
       queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.categories });
     },
     onError: (error: { message: string }) => {
-      console.error('❌ Failed to restore category:', error.message);
+      console.error("❌ Failed to restore category:", error.message);
     },
   });
 };
@@ -149,6 +156,18 @@ export const useAssets = (filters?: AssetFilters) => {
   return useQuery({
     queryKey: ASSETS_QUERY_KEYS.assets(filters),
     queryFn: () => assetsService.getAssets(filters),
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+};
+
+/**
+ * Hook: Get user's own assets with filters (my-assets endpoint)
+ * This fetches only assets created by the authenticated user
+ */
+export const useMyAssets = (filters?: AssetFilters) => {
+  return useQuery({
+    queryKey: ASSETS_QUERY_KEYS.myAssets(filters),
+    queryFn: () => assetsService.getMyAssets(filters),
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 };
@@ -180,14 +199,14 @@ export const useAssetStats = () => {
  */
 export const useCreateAsset = () => {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
     mutationFn: (data: CreateAssetDto) => assetsService.createAsset(data),
     onSuccess: (asset) => {
       console.log('✅ Asset created successfully:', asset);
       queryClient.invalidateQueries({ queryKey: ['assets', 'list'] });
+      queryClient.invalidateQueries({ queryKey: ['assets', 'my-assets'] }); // ✅ NEW
       queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.assetStats });
-      // Return a success signal that the component can handle
       return asset;
     },
     onError: (error: { message: string }) => {
@@ -201,13 +220,14 @@ export const useCreateAsset = () => {
  */
 export const useUpdateAsset = () => {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateAssetDto }) =>
       assetsService.updateAsset(id, data),
     onSuccess: (asset, variables) => {
       console.log('✅ Asset updated successfully:', asset);
       queryClient.invalidateQueries({ queryKey: ['assets', 'list'] });
+      queryClient.invalidateQueries({ queryKey: ['assets', 'my-assets'] }); // ✅ NEW
       queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.asset(variables.id) });
       queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.assetStats });
     },
@@ -216,18 +236,18 @@ export const useUpdateAsset = () => {
     },
   });
 };
-
 /**
  * Hook: Delete asset
  */
 export const useDeleteAsset = () => {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
     mutationFn: (id: string) => assetsService.deleteAsset(id),
     onSuccess: () => {
       console.log('✅ Asset deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['assets', 'list'] });
+      queryClient.invalidateQueries({ queryKey: ['assets', 'my-assets'] }); // ✅ NEW
       queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.assetStats });
     },
     onError: (error: { message: string }) => {
@@ -261,7 +281,7 @@ export const useUploadAssetImages = () => {
     mutationFn: ({ assetId, images }: { assetId: string; images: File[] }) =>
       assetsService.uploadAssetImages(assetId, images),
     onSuccess: (images, variables) => {
-      console.log('✅ Images uploaded successfully:', images);
+      console.log("✅ Images uploaded successfully:", images);
       queryClient.invalidateQueries({
         queryKey: ASSETS_QUERY_KEYS.assetImages(variables.assetId),
       });
@@ -270,7 +290,7 @@ export const useUploadAssetImages = () => {
       });
     },
     onError: (error: { message: string }) => {
-      console.error('❌ Failed to upload images:', error.message);
+      console.error("❌ Failed to upload images:", error.message);
     },
   });
 };
@@ -285,7 +305,7 @@ export const useDeleteAssetImage = () => {
     mutationFn: ({ assetId, imageId }: { assetId: string; imageId: string }) =>
       assetsService.deleteAssetImage(assetId, imageId),
     onSuccess: (_, variables) => {
-      console.log('✅ Image deleted successfully');
+      console.log("✅ Image deleted successfully");
       queryClient.invalidateQueries({
         queryKey: ASSETS_QUERY_KEYS.assetImages(variables.assetId),
       });
@@ -294,7 +314,7 @@ export const useDeleteAssetImage = () => {
       });
     },
     onError: (error: { message: string }) => {
-      console.error('❌ Failed to delete image:', error.message);
+      console.error("❌ Failed to delete image:", error.message);
     },
   });
 };
@@ -309,7 +329,7 @@ export const useSetPrimaryImage = () => {
     mutationFn: ({ assetId, imageId }: { assetId: string; imageId: string }) =>
       assetsService.setPrimaryImage(assetId, imageId),
     onSuccess: (image, variables) => {
-      console.log('✅ Primary image set successfully:', image);
+      console.log("✅ Primary image set successfully:", image);
       queryClient.invalidateQueries({
         queryKey: ASSETS_QUERY_KEYS.assetImages(variables.assetId),
       });
@@ -318,7 +338,7 @@ export const useSetPrimaryImage = () => {
       });
     },
     onError: (error: { message: string }) => {
-      console.error('❌ Failed to set primary image:', error.message);
+      console.error("❌ Failed to set primary image:", error.message);
     },
   });
 };
@@ -341,7 +361,10 @@ export const useAssetMaintenance = (assetId: string) => {
 /**
  * Hook: Get single maintenance record
  */
-export const useMaintenanceRecord = (assetId: string, maintenanceId: string) => {
+export const useMaintenanceRecord = (
+  assetId: string,
+  maintenanceId: string
+) => {
   return useQuery({
     queryKey: ASSETS_QUERY_KEYS.maintenanceRecord(assetId, maintenanceId),
     queryFn: () => assetsService.getMaintenanceById(assetId, maintenanceId),
@@ -356,17 +379,24 @@ export const useCreateMaintenance = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ assetId, data }: { assetId: string; data: CreateMaintenanceDto }) =>
-      assetsService.createMaintenance(assetId, data),
+    mutationFn: ({
+      assetId,
+      data,
+    }: {
+      assetId: string;
+      data: CreateMaintenanceDto;
+    }) => assetsService.createMaintenance(assetId, data),
     onSuccess: (maintenance, variables) => {
-      console.log('✅ Maintenance record created successfully:', maintenance);
+      console.log("✅ Maintenance record created successfully:", maintenance);
       queryClient.invalidateQueries({
         queryKey: ASSETS_QUERY_KEYS.maintenance(variables.assetId),
       });
-      queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.maintenanceStats });
+      queryClient.invalidateQueries({
+        queryKey: ASSETS_QUERY_KEYS.maintenanceStats,
+      });
     },
     onError: (error: { message: string }) => {
-      console.error('❌ Failed to create maintenance record:', error.message);
+      console.error("❌ Failed to create maintenance record:", error.message);
     },
   });
 };
@@ -388,17 +418,22 @@ export const useUpdateMaintenance = () => {
       data: UpdateMaintenanceDto;
     }) => assetsService.updateMaintenance(assetId, maintenanceId, data),
     onSuccess: (maintenance, variables) => {
-      console.log('✅ Maintenance record updated successfully:', maintenance);
+      console.log("✅ Maintenance record updated successfully:", maintenance);
       queryClient.invalidateQueries({
         queryKey: ASSETS_QUERY_KEYS.maintenance(variables.assetId),
       });
       queryClient.invalidateQueries({
-        queryKey: ASSETS_QUERY_KEYS.maintenanceRecord(variables.assetId, variables.maintenanceId),
+        queryKey: ASSETS_QUERY_KEYS.maintenanceRecord(
+          variables.assetId,
+          variables.maintenanceId
+        ),
       });
-      queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.maintenanceStats });
+      queryClient.invalidateQueries({
+        queryKey: ASSETS_QUERY_KEYS.maintenanceStats,
+      });
     },
     onError: (error: { message: string }) => {
-      console.error('❌ Failed to update maintenance record:', error.message);
+      console.error("❌ Failed to update maintenance record:", error.message);
     },
   });
 };
@@ -410,17 +445,24 @@ export const useDeleteMaintenance = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ assetId, maintenanceId }: { assetId: string; maintenanceId: string }) =>
-      assetsService.deleteMaintenance(assetId, maintenanceId),
+    mutationFn: ({
+      assetId,
+      maintenanceId,
+    }: {
+      assetId: string;
+      maintenanceId: string;
+    }) => assetsService.deleteMaintenance(assetId, maintenanceId),
     onSuccess: (_, variables) => {
-      console.log('✅ Maintenance record deleted successfully');
+      console.log("✅ Maintenance record deleted successfully");
       queryClient.invalidateQueries({
         queryKey: ASSETS_QUERY_KEYS.maintenance(variables.assetId),
       });
-      queryClient.invalidateQueries({ queryKey: ASSETS_QUERY_KEYS.maintenanceStats });
+      queryClient.invalidateQueries({
+        queryKey: ASSETS_QUERY_KEYS.maintenanceStats,
+      });
     },
     onError: (error: { message: string }) => {
-      console.error('❌ Failed to delete maintenance record:', error.message);
+      console.error("❌ Failed to delete maintenance record:", error.message);
     },
   });
 };

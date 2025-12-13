@@ -1,16 +1,22 @@
- // src/features/assets/types/index.ts
+// src/features/assets/types/index.ts
 
 import type { BaseEntity } from "@/types/common";
-import type { PaginatedResponse, PaginationParams } from "@/api/types";
+import type { ApiResponse, PaginationParams } from "@/api/types";
+
+/**
+ * ============================================================
+ * ENUMS
+ * ============================================================
+ */
 
 /**
  * Asset Type Enum
  */
 export const AssetType = {
-  LAND: 'LAND',
-  COMMERCIAL: 'COMMERCIAL',
-  RESIDENTIAL: 'RESIDENTIAL',
-  INDUSTRIAL: 'INDUSTRIAL',
+  LAND: 'land',
+  COMMERCIAL: 'commercial',
+  RESIDENTIAL: 'residential',
+  INDUSTRIAL: 'industrial',
 } as const;
 
 export type AssetType = (typeof AssetType)[keyof typeof AssetType];
@@ -28,7 +34,6 @@ export const MaintenanceType = {
 
 export type MaintenanceType = (typeof MaintenanceType)[keyof typeof MaintenanceType];
 
-
 /**
  * Maintenance Status Enum
  */
@@ -42,6 +47,22 @@ export const MaintenanceStatus = {
 export type MaintenanceStatus =
   (typeof MaintenanceStatus)[keyof typeof MaintenanceStatus];
 
+/**
+ * ============================================================
+ * CORE ENTITIES
+ * ============================================================
+ */
+
+/**
+ * Asset Image
+ */
+export interface AssetImage extends BaseEntity {
+  url: string;
+  thumbnail: string;
+  isPrimary: boolean;
+  order: number;
+  assetId: string;
+}
 
 /**
  * Asset Category
@@ -55,32 +76,35 @@ export interface AssetCategory extends BaseEntity {
 }
 
 /**
- * Asset Image
- */
-export interface AssetImage extends BaseEntity {
-  url: string;
-  isPrimary: boolean;
-  assetId: string;
-}
-
-/**
- * Asset Entity
+ * Asset Entity - Matches API response structure
  */
 export interface Asset extends BaseEntity {
+  id: string;
   name: string;
   type: AssetType;
-  description: string;
   location: string;
   purchasePrice: number;
-  purchaseDate: string;
+  createdAt: string;
+  
+  // Optional fields
+  description?: string;
   size?: number;
   yearBuilt?: number;
+  
+  // Sub-units
   subUnitCount?: number;
-  amenities?: string[];
-  categoryId?: string;
-  category?: AssetCategory;
+  subUnitLabel?: string;
+  occupiedSubUnits?: number;
+  availableSubUnits?: number;
+  occupancyRate?: number;
+  
+  // Relations
+  category?: AssetCategory | null;
+  primaryImage?: AssetImage | null;
   images?: AssetImage[];
-  userId: string;
+  
+  // Other
+  userId?: string;
 }
 
 /**
@@ -102,6 +126,49 @@ export interface MaintenanceRecord extends BaseEntity {
   assetId: string;
   asset?: Asset;
 }
+
+/**
+ * ============================================================
+ * API RESPONSE STRUCTURES
+ * ============================================================
+ */
+
+/**
+ * Assets List API Meta Information
+ */
+export interface AssetsListMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+/**
+ * Assets List API Response Data
+ */
+export interface AssetsListData {
+  data: Asset[];
+  meta: AssetsListMeta;
+}
+
+/**
+ * Get Assets List Response
+ * Matches: { success, data: { data, meta }, timestamp }
+ */
+export type GetAssetsListResponse = ApiResponse<AssetsListData>;
+
+/**
+ * Get Single Asset Response
+ */
+export type GetAssetResponse = ApiResponse<Asset>;
+
+/**
+ * ============================================================
+ * DTOs - DATA TRANSFER OBJECTS
+ * ============================================================
+ */
 
 /**
  * Create Asset Category DTO
@@ -133,7 +200,7 @@ export interface CreateAssetDto {
   subUnitCount?: number;
   amenities?: string[];
   categoryId?: string;
-  images: File[]; // Multiple files
+  images: File[];
 }
 
 /**
@@ -151,19 +218,6 @@ export interface UpdateAssetDto {
   subUnitCount?: number;
   amenities?: string[];
   categoryId?: string;
-}
-
-/**
- * Asset Filter Parameters
- */
-export interface AssetFilters extends PaginationParams {
-  type?: AssetType;
-  categoryId?: string;
-  location?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  search?: string;
-  hasAvailableUnits?: boolean;
 }
 
 /**
@@ -191,6 +245,32 @@ export interface UpdateMaintenanceDto extends Partial<CreateMaintenanceDto> {
 }
 
 /**
+ * ============================================================
+ * FILTER & QUERY PARAMETERS
+ * ============================================================
+ */
+
+/**
+ * Asset Filter Parameters
+ * Extends base pagination and adds asset-specific filters
+ */
+export interface AssetFilters extends PaginationParams {
+  search?: string;
+  type?: AssetType;
+  categoryId?: string;
+  location?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  hasAvailableUnits?: boolean;
+}
+
+/**
+ * ============================================================
+ * STATISTICS & ANALYTICS
+ * ============================================================
+ */
+
+/**
  * Asset Statistics
  */
 export interface AssetStats {
@@ -212,13 +292,3 @@ export interface MaintenanceStats {
   byType: Record<MaintenanceType, number>;
   byStatus: Record<MaintenanceStatus, number>;
 }
-
-/**
- * Paginated Assets Response
- */
-export type PaginatedAssets = PaginatedResponse<Asset>;
-
-/**
- * Paginated Maintenance Response
- */
-export type PaginatedMaintenance = PaginatedResponse<MaintenanceRecord>;

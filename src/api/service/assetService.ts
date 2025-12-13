@@ -1,195 +1,267 @@
- // src/api/services/assets.service.ts
+// src/api/service.ts (Assets Service Methods)
 
-import { apiClient, extractData } from '../client';
-import { ASSETS_ENDPOINTS } from '../endpoints';
-import type { ApiResponse } from '../types';
 import type {
   Asset,
+  AssetFilters,
   AssetCategory,
-  AssetImage,
-  MaintenanceRecord,
-  CreateAssetCategoryDto,
-  UpdateAssetCategoryDto,
   CreateAssetDto,
   UpdateAssetDto,
-  AssetFilters,
+  CreateAssetCategoryDto,
+  UpdateAssetCategoryDto,
   CreateMaintenanceDto,
   UpdateMaintenanceDto,
-  AssetStats,
-  MaintenanceStats,
-  PaginatedAssets,
-} from '@/features/settlements/types';
+  MaintenanceRecord,
+  AssetsListData,
+  GetAssetsListResponse,
+  GetAssetResponse,
+} from "@/features/settlements/types";
+import type { ApiResponse } from "@/api/types";
+import { ASSETS_ENDPOINTS } from "@/api/endpoints/assetEndpoints";
+import { apiClient } from "../client";
+// import apiClient from "@/api/client"; // Your axios instance or fetch wrapper
 
 /**
  * Assets Service
- * All asset-related API calls
+ * Handles all asset-related API calls and data transformation
  */
 export const assetsService = {
-  // ============================================================
-  // ASSET CATEGORIES
-  // ============================================================
-
   /**
-   * Create a new asset category
+   * Get all assets with filters
+   * Returns: AssetsListData { data: Asset[], meta: AssetsListMeta }
    */
-  createCategory: async (data: CreateAssetCategoryDto): Promise<AssetCategory> => {
-    const response = await apiClient.post<ApiResponse<AssetCategory>>(
-      ASSETS_ENDPOINTS.CATEGORIES,
-      data
-    );
-    return extractData(response);
-  },
+  async getAssets(filters?: AssetFilters): Promise<AssetsListData> {
+    try {
+      const response = await apiClient.get<GetAssetsListResponse>(
+        ASSETS_ENDPOINTS.ASSETS,
+        { params: filters }
+      );
 
-  /**
-   * Get all asset categories
-   */
-  getCategories: async (): Promise<AssetCategory[]> => {
-    const response = await apiClient.get<ApiResponse<AssetCategory[]>>(
-      ASSETS_ENDPOINTS.CATEGORIES
-    );
-    return extractData(response);
-  },
-
-  /**
-   * Get category by ID
-   */
-  getCategoryById: async (id: string): Promise<AssetCategory> => {
-    const response = await apiClient.get<ApiResponse<AssetCategory>>(
-      ASSETS_ENDPOINTS.CATEGORY_BY_ID(id)
-    );
-    return extractData(response);
-  },
-
-  /**
-   * Update category
-   */
-  updateCategory: async (
-    id: string,
-    data: UpdateAssetCategoryDto
-  ): Promise<AssetCategory> => {
-    const response = await apiClient.patch<ApiResponse<AssetCategory>>(
-      ASSETS_ENDPOINTS.CATEGORY_BY_ID(id),
-      data
-    );
-    return extractData(response);
-  },
-
-  /**
-   * Soft delete category
-   */
-  deleteCategory: async (id: string): Promise<void> => {
-    await apiClient.delete(ASSETS_ENDPOINTS.CATEGORY_BY_ID(id));
-  },
-
-  /**
-   * Restore deleted category
-   */
-  restoreCategory: async (id: string): Promise<AssetCategory> => {
-    const response = await apiClient.patch<ApiResponse<AssetCategory>>(
-      ASSETS_ENDPOINTS.RESTORE_CATEGORY(id)
-    );
-    return extractData(response);
-  },
-
-  // ============================================================
-  // ASSETS
-  // ============================================================
-
-  /**
-   * Create a new asset with images (multipart/form-data)
-   */
-  createAsset: async (data: CreateAssetDto): Promise<Asset> => {
-    const formData = new FormData();
-
-    // Append text fields
-    formData.append('name', data.name);
-    formData.append('type', data.type);
-    formData.append('description', data.description);
-    formData.append('location', data.location);
-    formData.append('purchasePrice', data.purchasePrice.toString());
-    formData.append('purchaseDate', data.purchaseDate);
-
-    // Optional fields
-    if (data.size !== undefined) {
-      formData.append('size', data.size.toString());
+      // Extract nested data from API response wrapper
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching assets:", error);
+      throw error;
     }
-    if (data.yearBuilt !== undefined) {
-      formData.append('yearBuilt', data.yearBuilt.toString());
-    }
-    if (data.subUnitCount !== undefined) {
-      formData.append('subUnitCount', data.subUnitCount.toString());
-    }
-    if (data.categoryId) {
-      formData.append('categoryId', data.categoryId);
-    }
-
-    // Append amenities as array
-    if (data.amenities && data.amenities.length > 0) {
-      data.amenities.forEach((amenity) => {
-        formData.append('amenities[]', amenity);
-      });
-    }
-
-    // Append images
-    data.images.forEach((image) => {
-      formData.append('images', image);
-    });
-
-    const response = await apiClient.post<ApiResponse<Asset>>(
-      ASSETS_ENDPOINTS.ASSETS,
-      formData,
-    
-    );
-    return extractData(response);
   },
 
-  /**
-   * Get all assets with filters and pagination
+
+ /**
+   * Get user's own assets with filters (my-assets endpoint)
+   * Returns: AssetsListData { data: Asset[], meta: AssetsListMeta }
    */
-  getAssets: async (filters?: AssetFilters): Promise<PaginatedAssets> => {
-    const response = await apiClient.get<ApiResponse<PaginatedAssets>>(
-      ASSETS_ENDPOINTS.ASSETS,
-      { params: filters }
-    );
-    return extractData(response);
+  async getMyAssets(filters?: AssetFilters): Promise<AssetsListData> {
+    try {
+      const response = await apiClient.get<GetAssetsListResponse>(
+        ASSETS_ENDPOINTS.MY_ASSETS,
+        { params: filters }
+      );
+      // Extract nested data from API response wrapper
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching my assets:", error);
+      throw error;
+    }
+  },
+
+
+  /**
+   * Get single asset by ID
+   */
+  async getAssetById(id: string): Promise<Asset> {
+    try {
+      const response = await apiClient.get<GetAssetResponse>(
+        ASSETS_ENDPOINTS.ASSET_BY_ID(id)
+      );
+
+      // Extract asset data from API response wrapper
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error fetching asset ${id}:`, error);
+      throw error;
+    }
   },
 
   /**
    * Get asset statistics
    */
-  getAssetStats: async (): Promise<AssetStats> => {
-    const response = await apiClient.get<ApiResponse<AssetStats>>(
-      ASSETS_ENDPOINTS.ASSET_STATS
-    );
-    return extractData(response);
+  async getAssetStats() {
+    try {
+      const response = await apiClient.get<ApiResponse>(
+        ASSETS_ENDPOINTS.ASSET_STATS
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching asset stats:", error);
+      throw error;
+    }
   },
 
   /**
-   * Get asset by ID
+   * Create new asset
    */
-  getAssetById: async (id: string): Promise<Asset> => {
-    const response = await apiClient.get<ApiResponse<Asset>>(
-      ASSETS_ENDPOINTS.ASSET_BY_ID(id)
-    );
-    return extractData(response);
+  async createAsset(data: CreateAssetDto): Promise<Asset> {
+    try {
+      const formData = new FormData();
+
+      // Add form fields
+      formData.append("name", data.name);
+      formData.append("type", data.type);
+      formData.append("description", data.description);
+      formData.append("location", data.location);
+      formData.append("purchasePrice", String(data.purchasePrice));
+      formData.append("purchaseDate", data.purchaseDate);
+
+      if (data.size) formData.append("size", String(data.size));
+      if (data.yearBuilt) formData.append("yearBuilt", String(data.yearBuilt));
+      if (data.subUnitCount)
+        formData.append("subUnitCount", String(data.subUnitCount));
+      if (data.categoryId) formData.append("categoryId", data.categoryId);
+
+      // Add images
+      data.images.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      const response = await apiClient.post<GetAssetResponse>(
+        ASSETS_ENDPOINTS.ASSETS,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      return response.data.data;
+    } catch (error) {
+      console.error("Error creating asset:", error);
+      throw error;
+    }
   },
 
   /**
-   * Update asset
+   * Update existing asset
    */
-  updateAsset: async (id: string, data: UpdateAssetDto): Promise<Asset> => {
-    const response = await apiClient.patch<ApiResponse<Asset>>(
-      ASSETS_ENDPOINTS.ASSET_BY_ID(id),
-      data
-    );
-    return extractData(response);
+  async updateAsset(id: string, data: UpdateAssetDto): Promise<Asset> {
+    try {
+      const response = await apiClient.patch<GetAssetResponse>(
+        ASSETS_ENDPOINTS.ASSET_BY_ID(id),
+        data
+      );
+
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error updating asset ${id}:`, error);
+      throw error;
+    }
   },
 
   /**
-   * Soft delete asset
+   * Delete asset
    */
-  deleteAsset: async (id: string): Promise<void> => {
-    await apiClient.delete(ASSETS_ENDPOINTS.ASSET_BY_ID(id));
+  async deleteAsset(id: string): Promise<void> {
+    try {
+      await apiClient.delete(ASSETS_ENDPOINTS.ASSET_BY_ID(id));
+    } catch (error) {
+      console.error(`Error deleting asset ${id}:`, error);
+      throw error;
+    }
+  },
+
+  // ============================================================
+  // ASSET CATEGORIES
+  // ============================================================
+
+  /**
+   * Get all asset categories
+   */
+  async getCategories(): Promise<AssetCategory[]> {
+    try {
+      const response = await apiClient.get<ApiResponse<AssetCategory[]>>(
+        ASSETS_ENDPOINTS.CATEGORIES
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get category by ID
+   */
+  async getCategoryById(id: string): Promise<AssetCategory> {
+    try {
+      const response = await apiClient.get<ApiResponse<AssetCategory>>(
+        ASSETS_ENDPOINTS.CATEGORY_BY_ID(id)
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error fetching category ${id}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Create new category
+   */
+  async createCategory(data: CreateAssetCategoryDto): Promise<AssetCategory> {
+    try {
+      const response = await apiClient.post<ApiResponse<AssetCategory>>(
+        ASSETS_ENDPOINTS.CATEGORIES,
+        data
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error("Error creating category:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Update category
+   */
+  async updateCategory(
+    id: string,
+    data: UpdateAssetCategoryDto
+  ): Promise<AssetCategory> {
+    try {
+      const response = await apiClient.patch<ApiResponse<AssetCategory>>(
+        ASSETS_ENDPOINTS.CATEGORY_BY_ID(id),
+        data
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error updating category ${id}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Delete category
+   */
+  async deleteCategory(id: string): Promise<void> {
+    try {
+      await apiClient.delete(ASSETS_ENDPOINTS.CATEGORY_BY_ID(id));
+    } catch (error) {
+      console.error(`Error deleting category ${id}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Restore deleted category
+   */
+  async restoreCategory(id: string): Promise<AssetCategory> {
+    try {
+      const response = await apiClient.patch<ApiResponse<AssetCategory>>(
+        ASSETS_ENDPOINTS.RESTORE_CATEGORY(id)
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error restoring category ${id}:`, error);
+      throw error;
+    }
   },
 
   // ============================================================
@@ -197,51 +269,82 @@ export const assetsService = {
   // ============================================================
 
   /**
-   * Upload images to existing asset
+   * Get asset images
    */
-  uploadAssetImages: async (assetId: string, images: File[]): Promise<AssetImage[]> => {
-    const formData = new FormData();
-    images.forEach((image) => {
-      formData.append('images', image);
-    });
-
-    const response = await apiClient.post<ApiResponse<AssetImage[]>>(
-      ASSETS_ENDPOINTS.ASSET_IMAGES(assetId),
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
-    return extractData(response);
+  async getAssetImages(assetId: string) {
+    try {
+      const response = await apiClient.get<ApiResponse>(
+        ASSETS_ENDPOINTS.ASSET_IMAGES(assetId)
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error fetching images for asset ${assetId}:`, error);
+      throw error;
+    }
   },
 
   /**
-   * Get all images for an asset
+   * Upload asset images
    */
-  getAssetImages: async (assetId: string): Promise<AssetImage[]> => {
-    const response = await apiClient.get<ApiResponse<AssetImage[]>>(
-      ASSETS_ENDPOINTS.ASSET_IMAGES(assetId)
-    );
-    return extractData(response);
+  async uploadAssetImages(assetId: string, images: File[]) {
+    try {
+      const formData = new FormData();
+      images.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      const response = await apiClient.post<ApiResponse>(
+        ASSETS_ENDPOINTS.ASSET_IMAGES(assetId),
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(
+        `Error uploading images for asset ${assetId}:`,
+        error
+      );
+      throw error;
+    }
   },
 
   /**
-   * Delete specific image
+   * Delete asset image
    */
-  deleteAssetImage: async (assetId: string, imageId: string): Promise<void> => {
-    await apiClient.delete(ASSETS_ENDPOINTS.ASSET_IMAGE_BY_ID(assetId, imageId));
+  async deleteAssetImage(assetId: string, imageId: string): Promise<void> {
+    try {
+      await apiClient.delete(
+        ASSETS_ENDPOINTS.ASSET_IMAGE_BY_ID(assetId, imageId)
+      );
+    } catch (error) {
+      console.error(
+        `Error deleting image ${imageId} for asset ${assetId}:`,
+        error
+      );
+      throw error;
+    }
   },
 
   /**
    * Set primary image
    */
-  setPrimaryImage: async (assetId: string, imageId: string): Promise<AssetImage> => {
-    const response = await apiClient.patch<ApiResponse<AssetImage>>(
-      ASSETS_ENDPOINTS.SET_PRIMARY_IMAGE(assetId, imageId)
-    );
-    return extractData(response);
+  async setPrimaryImage(assetId: string, imageId: string) {
+    try {
+      const response = await apiClient.patch<ApiResponse>(
+        ASSETS_ENDPOINTS.SET_PRIMARY_IMAGE(assetId, imageId)
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(
+        `Error setting primary image for asset ${assetId}:`,
+        error
+      );
+      throw error;
+    }
   },
 
   // ============================================================
@@ -249,96 +352,137 @@ export const assetsService = {
   // ============================================================
 
   /**
-   * Create maintenance record
+   * Get asset maintenance records
    */
-  createMaintenance: async (
-    assetId: string,
-    data: CreateMaintenanceDto
-  ): Promise<MaintenanceRecord> => {
-    const response = await apiClient.post<ApiResponse<MaintenanceRecord>>(
-      ASSETS_ENDPOINTS.MAINTENANCE(assetId),
-      data
-    );
-    return extractData(response);
-  },
-
-  /**
-   * Get all maintenance for asset
-   */
-  getAssetMaintenance: async (assetId: string): Promise<MaintenanceRecord[]> => {
-    const response = await apiClient.get<ApiResponse<MaintenanceRecord[]>>(
-      ASSETS_ENDPOINTS.MAINTENANCE(assetId)
-    );
-    return extractData(response);
+  async getAssetMaintenance(assetId: string) {
+    try {
+      const response = await apiClient.get<ApiResponse>(
+        ASSETS_ENDPOINTS.MAINTENANCE(assetId)
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(
+        `Error fetching maintenance for asset ${assetId}:`,
+        error
+      );
+      throw error;
+    }
   },
 
   /**
    * Get single maintenance record
    */
-  getMaintenanceById: async (
+  async getMaintenanceById(assetId: string, maintenanceId: string) {
+    try {
+      const response = await apiClient.get<ApiResponse>(
+        ASSETS_ENDPOINTS.MAINTENANCE_BY_ID(assetId, maintenanceId)
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error fetching maintenance record:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Create maintenance record
+   */
+  async createMaintenance(
     assetId: string,
-    maintenanceId: string
-  ): Promise<MaintenanceRecord> => {
-    const response = await apiClient.get<ApiResponse<MaintenanceRecord>>(
-      ASSETS_ENDPOINTS.MAINTENANCE_BY_ID(assetId, maintenanceId)
-    );
-    return extractData(response);
+    data: CreateMaintenanceDto
+  ): Promise<MaintenanceRecord> {
+    try {
+      const response = await apiClient.post<ApiResponse<MaintenanceRecord>>(
+        ASSETS_ENDPOINTS.MAINTENANCE(assetId),
+        data
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(
+        `Error creating maintenance for asset ${assetId}:`,
+        error
+      );
+      throw error;
+    }
   },
 
   /**
    * Update maintenance record
    */
-  updateMaintenance: async (
+  async updateMaintenance(
     assetId: string,
     maintenanceId: string,
     data: UpdateMaintenanceDto
-  ): Promise<MaintenanceRecord> => {
-    const response = await apiClient.patch<ApiResponse<MaintenanceRecord>>(
-      ASSETS_ENDPOINTS.MAINTENANCE_BY_ID(assetId, maintenanceId),
-      data
-    );
-    return extractData(response);
+  ): Promise<MaintenanceRecord> {
+    try {
+      const response = await apiClient.patch<ApiResponse<MaintenanceRecord>>(
+        ASSETS_ENDPOINTS.MAINTENANCE_BY_ID(assetId, maintenanceId),
+        data
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error updating maintenance record:`, error);
+      throw error;
+    }
   },
 
   /**
    * Delete maintenance record
    */
-  deleteMaintenance: async (assetId: string, maintenanceId: string): Promise<void> => {
-    await apiClient.delete(ASSETS_ENDPOINTS.MAINTENANCE_BY_ID(assetId, maintenanceId));
+  async deleteMaintenance(assetId: string, maintenanceId: string): Promise<void> {
+    try {
+      await apiClient.delete(
+        ASSETS_ENDPOINTS.MAINTENANCE_BY_ID(assetId, maintenanceId)
+      );
+    } catch (error) {
+      console.error(`Error deleting maintenance record:`, error);
+      throw error;
+    }
   },
-
-  // ============================================================
-  // MAINTENANCE OVERVIEW
-  // ============================================================
 
   /**
    * Get upcoming maintenance
    */
-  getUpcomingMaintenance: async (days?: number): Promise<MaintenanceRecord[]> => {
-    const response = await apiClient.get<ApiResponse<MaintenanceRecord[]>>(
-      ASSETS_ENDPOINTS.MAINTENANCE_UPCOMING,
-      { params: { days } }
-    );
-    return extractData(response);
+  async getUpcomingMaintenance(days?: number) {
+    try {
+      const response = await apiClient.get<ApiResponse>(
+        ASSETS_ENDPOINTS.MAINTENANCE_UPCOMING,
+        { params: days ? { days } : undefined }
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching upcoming maintenance:", error);
+      throw error;
+    }
   },
 
   /**
    * Get overdue maintenance
    */
-  getOverdueMaintenance: async (): Promise<MaintenanceRecord[]> => {
-    const response = await apiClient.get<ApiResponse<MaintenanceRecord[]>>(
-      ASSETS_ENDPOINTS.MAINTENANCE_OVERDUE
-    );
-    return extractData(response);
+  async getOverdueMaintenance() {
+    try {
+      const response = await apiClient.get<ApiResponse>(
+        ASSETS_ENDPOINTS.MAINTENANCE_OVERDUE
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching overdue maintenance:", error);
+      throw error;
+    }
   },
 
   /**
    * Get maintenance statistics
    */
-  getMaintenanceStats: async (): Promise<MaintenanceStats> => {
-    const response = await apiClient.get<ApiResponse<MaintenanceStats>>(
-      ASSETS_ENDPOINTS.MAINTENANCE_STATS
-    );
-    return extractData(response);
+  async getMaintenanceStats() {
+    try {
+      const response = await apiClient.get<ApiResponse>(
+        ASSETS_ENDPOINTS.MAINTENANCE_STATS
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching maintenance stats:", error);
+      throw error;
+    }
   },
 };
