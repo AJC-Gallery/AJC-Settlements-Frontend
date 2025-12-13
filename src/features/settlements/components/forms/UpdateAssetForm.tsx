@@ -31,6 +31,16 @@ interface AssetImage {
   order: number;
 }
 
+interface UpdateError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
+
 interface UpdateAssetFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -221,7 +231,7 @@ export const UpdateAssetForm = ({
               console.log("✅ Step 1 complete: Asset fields updated");
               resolve();
             },
-            onError: (error: any) => {
+            onError: (error: UpdateError) => {
               console.error("❌ Step 1 failed:", error);
               reject(error);
             },
@@ -255,16 +265,17 @@ export const UpdateAssetForm = ({
       // Success!
       toast.success(`Asset "${formData.name}" updated successfully!`);
       handleClose();
-    } catch (error: any) {
-      console.error("❌ Update failed:", error);
-      const errorMessage =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Failed to update asset";
-      toast.error(errorMessage);
-    } finally {
-      setIsProcessing(false);
-    }
+    } catch (error) {
+    console.error("❌ Update failed:", error);
+    const updateError = error as UpdateError;
+    const errorMessage =
+      updateError?.response?.data?.message ||
+      updateError?.message ||
+      "Failed to update asset";
+    toast.error(errorMessage);
+  } finally {
+    setIsProcessing(false);
+  }
   };
 
   const handleClose = () => {

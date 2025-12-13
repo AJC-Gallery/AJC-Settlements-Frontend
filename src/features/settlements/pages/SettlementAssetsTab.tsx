@@ -1,12 +1,12 @@
 // SettlementAssetsTab.tsx - Production-ready with proper state management
 import { useState, useMemo, useEffect } from "react";
-import { Home, Search, X, ChevronDown, Loader2 } from "lucide-react";
+import {  Search, X, ChevronDown, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {  useMyAssets } from "@/hooks/useAssets";
 import AssetsCard from "../components/SettlementSwiper";
 import GlassSelect from "@/components/ui/glassmorphicSelectComponent";
-import CustomGlassButton from "@/components/ui/custom-button";
-
+import type { AssetType } from "../types";
+ 
 // Custom debounce hook
 const useDebounce = <T,>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -61,7 +61,7 @@ const SettlementAssetsTab = () => {
   const debouncedSearchQuery = useDebounce(searchInput, DEBOUNCE_DELAY);
   
   // Filter states
-  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<AssetType | null>(null);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, PRICE_MAX]);
   const debouncedPriceRange = useDebounce(priceRange, DEBOUNCE_DELAY);
   const [sortBy, setSortBy] = useState("recent");
@@ -80,8 +80,13 @@ const SettlementAssetsTab = () => {
   });
 
   // Extract assets and metadata
-  const allAssets = (assetsResponse as AssetsResponse)?.data || [];
-  const meta = (assetsResponse as AssetsResponse)?.meta;
+  const allAssets = useMemo(() => {
+    return (assetsResponse as AssetsResponse)?.data || [];
+  }, [assetsResponse]);
+
+  const meta = useMemo(() => {
+    return (assetsResponse as AssetsResponse)?.meta;
+  }, [assetsResponse]);  
 
   // Determine UI state
   const hasActiveSearch = searchInput.length >= SEARCH_MIN_LENGTH;
@@ -95,7 +100,7 @@ const SettlementAssetsTab = () => {
   const isNoResultsState = !hasAnyAssets && (hasActiveSearch || hasActiveFilters);
 
   // Calculate asset type counts
-  const assetTypes = useMemo(() => {
+   const assetTypes = useMemo(() => {
     const counts = allAssets.reduce((acc, asset) => {
       acc[asset.type] = (acc[asset.type] || 0) + 1;
       return acc;
@@ -312,7 +317,7 @@ const SettlementAssetsTab = () => {
                         key={type.value}
                         onClick={() =>
                           setSelectedType(
-                            selectedType === type.value ? null : type.value
+                            selectedType === type.value ? null : (type.value as AssetType)
                           )
                         }
                         className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${

@@ -48,7 +48,7 @@ export const AppRoutes = () => {
         <Route path="/organizations" element={<OrganizationsPage />} />
         <Route path="/occupants" element={<OccupantsPage />} />
         <Route path="/revenue" element={<RevenuePage />} />
-        <Route path="/contact" element={<ContactInfoPage />} />
+        <Route path="/contact-info" element={<ContactInfoPage />} />
       </Route>
 
       {/* Catch-all redirect */}

@@ -1,4 +1,5 @@
 import { ChevronRight, type LucideIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface MenuItem {
   icon: LucideIcon;
@@ -24,6 +25,12 @@ export const MobileMenu = ({
   handleNavigation,
   isActive,
 }: MobileMenuProps) => {
+
+   const navigate = useNavigate();
+  const handleTabtClick = (e:string) => {
+    navigate(`/${e}`);
+    setIsMobileMenuOpen(false);
+  };
   return (
     <>
       {/* Fixed: Mobile Menu Overlay - now properly closes menu */}
@@ -99,10 +106,10 @@ export const MobileMenu = ({
 
           {/* Header Actions - Mobile */}
           <div className="pt-4 border-t border-white/10 space-y-2">
-            <button className="w-full px-3 py-2 bg-transparent underline text-sm text-white text-left">
+            <button onClick={() => handleTabtClick("contact-info")} className="w-full px-3 py-2 bg-transparent underline text-sm text-white text-left">
               Contact us
             </button>
-            <button className="w-full px-3 py-2 bg-transparent underline text-sm text-white text-left">
+            <button onClick={() => handleTabtClick("organizations")} className="w-full px-3 py-2 bg-transparent underline text-sm text-white text-left">
               Organization
             </button>
           </div>

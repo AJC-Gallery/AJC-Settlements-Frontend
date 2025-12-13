@@ -83,6 +83,7 @@ export interface Asset extends BaseEntity {
   name: string;
   type: AssetType;
   location: string;
+  purchaseDate: string;
   purchasePrice: number;
   createdAt: string;
   
