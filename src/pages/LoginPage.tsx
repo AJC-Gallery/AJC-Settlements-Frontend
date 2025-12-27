@@ -1,7 +1,7 @@
+// src/pages/SignInPage.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SignInForm } from '../features/auth/components';
-// import { SignInForm } from '../components/SignInForm';
 
 export const SignInPage: React.FC = () => {
   const navigate = useNavigate();
@@ -11,9 +11,9 @@ export const SignInPage: React.FC = () => {
   };
 
   return (
-    <div className="flex w-full min-h-screen">
-      {/* Left side - Brand/Info section */}
-      <div className="flex-1 bg-gradient-to-br from-blue-900 via-black to-black flex items-center justify-center p-8 lg:p-12">
+    <div className="flex w-full min-h-[100svh]">
+      {/* Left side - Brand/Info section - Hidden on mobile */}
+      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-blue-900 via-black to-black items-center justify-center p-8 lg:p-12">
         <div className="text-white text-center lg:text-left max-w-md">
           <h2 className="text-3xl lg:text-4xl font-bold mb-4">
             Welcome Back
@@ -21,7 +21,7 @@ export const SignInPage: React.FC = () => {
           <p className="text-green-100 text-lg mb-6">
             Sign in to access your dashboard and manage your inventory.
           </p>
-          <div className="hidden lg:block">
+          <div>
             <div className="flex items-center space-x-2 mb-3">
               <div className="w-2 h-2 bg-green-300 rounded-full"></div>
               <span className="text-green-100">Secure authentication</span>
@@ -40,8 +40,8 @@ export const SignInPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Right side - Sign in form */}
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-12 bg-gray-50">
+      {/* Right side - Sign in form - Full width on mobile */}
+      <div className="w-full lg:flex-1 flex items-center justify-center p-6 lg:p-12 bg-gray-50">
         <SignInForm onSuccess={handleSignInSuccess} />
       </div>
     </div>

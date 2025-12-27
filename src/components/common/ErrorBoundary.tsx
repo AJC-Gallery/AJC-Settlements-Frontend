@@ -1,9 +1,7 @@
 // src/components/common/ErrorBoundary.tsx
 import { Component } from 'react';
-import type { ReactNode } from 'react';
-import type { ErrorInfo } from 'react';
+import type { ReactNode, ErrorInfo } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { env } from '@/config/environment';
 
 interface Props {
   children: ReactNode;
@@ -30,22 +28,10 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    this.setState({
-      error,
-      errorInfo,
-    });
+    this.setState({ error, errorInfo });
 
-    // Log error to monitoring service in production
-    if (env.isProduction) {
-      this.logErrorToService(error, errorInfo);
-    } else {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
-    }
-  }
-
-  private logErrorToService(error: Error, errorInfo: ErrorInfo) {
-    // Integrate with error monitoring service (Sentry, LogRocket, etc.)
-    console.error('Production error:', {
+    // Always log to console (no environment switching)
+    console.error('ErrorBoundary Caught:', {
       error: error.toString(),
       errorInfo,
       timestamp: new Date().toISOString(),
@@ -74,17 +60,16 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full">
               <AlertTriangle className="w-6 h-6 text-red-600" />
             </div>
-            
+
             <div className="mt-4 text-center">
-              <h1 className="text-lg font-semibold text-gray-900">
-                Something went wrong
-              </h1>
+              <h1 className="text-lg font-semibold text-gray-900">Something went wrong</h1>
               <p className="mt-2 text-sm text-gray-600">
-                We're sorry, but something unexpected happened. Please try again.
+                An unexpected error occurred. Please try again.
               </p>
             </div>
 
-            {env.isDevelopment && this.state.error && (
+            {/* Show error details ALWAYS in dev-friendly format */}
+            {this.state.error && (
               <div className="mt-4 p-3 bg-red-50 rounded-md">
                 <p className="text-xs font-mono text-red-800 break-all">
                   {this.state.error.toString()}
@@ -105,12 +90,13 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="mt-6 flex gap-3">
               <button
                 onClick={this.handleRetry}
-                className="flex-1 flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+                className="flex-1 flex items-center justify-center px-4 py-2 
+                bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Try Again
               </button>
-              
+
               <button
                 onClick={this.handleReload}
                 className="flex-1 px-4 py-2 bg-gray-200 text-gray-900 text-sm font-medium rounded-md hover:bg-gray-300 transition-colors"
@@ -118,12 +104,6 @@ export class ErrorBoundary extends Component<Props, State> {
                 Reload Page
               </button>
             </div>
-
-            {env.isProduction && (
-              <p className="mt-4 text-xs text-gray-500 text-center">
-                If this problem persists, please contact support.
-              </p>
-            )}
           </div>
         </div>
       );
