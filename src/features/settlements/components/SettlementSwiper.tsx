@@ -25,12 +25,12 @@ interface AssetsCardProps {
 
 export default function AssetsCard({ assets, onAssetClick }: AssetsCardProps) {
   // API may return purchaseDate OR createdAt
-  const formatDate = (dateString: string | undefined) => {
-    return new Date(dateString || "").toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-    });
-  };
+  // const formatDate = (dateString: string | undefined) => {
+  //   return new Date(dateString || "").toLocaleDateString("en-US", {
+  //     year: "numeric",
+  //     month: "short",
+  //   });
+  // };
 
   // Badge color logic
   const getTypeColor = (type: string) => {
@@ -207,66 +207,43 @@ export default function AssetsCard({ assets, onAssetClick }: AssetsCardProps) {
               </div>
 
               {/* TEXT CONTENT */}
-              <div className="px-3 pb-3 space-y-1">
-                <div className="flex justify-between">
-                  <h3 className="font-semibold text-sm lg:text-base text-white truncate">
+              <div className="px-3 pb-3 space-y-2">
+                <div className="flex flex-col space-y-2">
+                    {/* NAME */}
+                <div className="flex items-center gap-1.5   text-gray-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                  <h3 className="font-semibold capitalize text-[14px] lg:text-base text-white truncate">
+                    {/* <span className="font-thin text-xs pr-1 opacity-65">NAME:</span>  */}
                     {asset.name.slice(0, 10)}
                     {asset.name.length > 12 && (
                       <span className="align-baseline">…</span>
                     )}
                   </h3>
-                  {/* SUB UNITS */}
-                  {asset.subUnitCount ? (
-                    <div className="pt-1">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-white/5 border border-white/10 rounded text-xs text-gray-300">
-                        <svg
-                          className="w-3 h-3"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                          />
-                        </svg>
-                        {asset.subUnitCount} Flats
-                      </span>
-                    </div>
-                  ) : null}
-                </div>
-
-                <div className="flex items-center gap-1.5 text-xs text-gray-300">
-                  <svg
-                    className="w-3 h-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
+                  </div>
+                  {/* LOCATION */}
+                <div className="flex items-center gap-1.5 text-[11px] text-gray-300">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin-house-icon lucide-map-pin-house"><path d="M15 22a1 1 0 0 1-1-1v-4a1 1 0 0 1 .445-.832l3-2a1 1 0 0 1 1.11 0l3 2A1 1 0 0 1 22 17v4a1 1 0 0 1-1 1z"/><path d="M18 10a8 8 0 0 0-16 0c0 4.993 5.539 10.193 7.399 11.799a1 1 0 0 0 .601.2"/><path d="M18 22v-3"/><circle cx="10" cy="10" r="3"/></svg>
                   <span className="truncate">
+                    {/* <span className="font-thin text-xs pr-1 opacity-65">ADDRESS:</span>  */}
                     {asset.location.length > 15
                       ? asset.location.slice(0, 22) + "…"
                       : asset.location}
                   </span>
                 </div>
+              
+                </div>
+    {/* SUB UNITS */}
+                  {asset.subUnitCount ? (
+                    <div className="pt-1 flex items-center  gap-1">
+                      <span className="inline-flex items-center gap-2   py-0.5  text-[11px]  text-gray-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers2-icon lucide-layers-2"><path d="M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z"/><path d="m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845"/></svg>
+                        {asset.subUnitCount} Flats
+                      </span>
+                    </div>
+                  ) : null}
 
                 {/* PRICE + DATE */}
-                <div className="flex items-center justify-between pt-1">
+                {/* <div className="flex items-center justify-between pt-1">
                   <div>
                     <p className="text-xs text-gray-400">Price</p>
                     <p className="text-sm font-medium text-red-300 flex items-center gap-1">
@@ -282,7 +259,7 @@ export default function AssetsCard({ assets, onAssetClick }: AssetsCardProps) {
                       {formatDate(asset.purchaseDate || asset.createdAt)}
                     </p>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </SwiperSlide>
