@@ -203,7 +203,7 @@ const SingleSettlementsPage = () => {
             </CustomGlassButton>
             <CustomGlassButton
               onClick={() => navigate("/settlements")}
-              variant="ghost"
+              variant="outline"
               size="md"
               icon={<ArrowLeft />}
             >
@@ -246,7 +246,7 @@ const SingleSettlementsPage = () => {
         {/* Back Button */}
         <CustomGlassButton
           onClick={() => navigate("/settlements")}
-          variant="ghost"
+          variant="outline"
           size="md"
           icon={<ArrowLeft />}
         >
@@ -448,7 +448,7 @@ const SingleSettlementsPage = () => {
             <div className="flex gap-3">
               <CustomGlassButton
                 onClick={() => setShowDeleteConfirm(false)}
-                variant="ghost"
+                variant="outline"
                 size="md"
                 fullWidth
                 disabled={deleteAsset.isPending}
