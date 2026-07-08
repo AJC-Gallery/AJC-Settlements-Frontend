@@ -1,5 +1,5 @@
  import GlassCard from "@/components/ui/glassCard";
-import "./HowItWorksSection.css";
+import "./howItWorksSection.css";
 
 /* ==========================================================
    Small inline icon set — kept minimal on purpose so the
