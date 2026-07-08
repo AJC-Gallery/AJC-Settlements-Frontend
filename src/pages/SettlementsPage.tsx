@@ -54,7 +54,7 @@ const SettlementsPage = () => {
                   aria-selected={activeTab === "assets"}
                   aria-controls="assets-panel"
                   onClick={() => setActiveTab("assets")}
-                  variant={activeTab === "assets" ? "default" : "ghost"}
+                  variant={activeTab === "assets" ? "default" : "outline"}
                   className={`rounded-md ${
                     activeTab === "assets"
                       ? "bg-white/10 text-white shadow-sm"
@@ -70,7 +70,7 @@ const SettlementsPage = () => {
                   aria-selected={activeTab === "collections"}
                   aria-controls="collections-panel"
                   onClick={() => setActiveTab("collections")}
-                  variant={activeTab === "collections" ? "default" : "ghost"}
+                  variant={activeTab === "collections" ? "default" : "outline"}
                   className={`rounded-md ${
                     activeTab === "collections"
                       ? "bg-white/10 text-white shadow-sm"
