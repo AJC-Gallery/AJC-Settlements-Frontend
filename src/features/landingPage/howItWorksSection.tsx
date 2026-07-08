@@ -87,7 +87,7 @@ function MockSidebar({ activeIndex }: { activeIndex: number }) {
   );
 }
 
-function MockTopbar({ subtitle }: { subtitle: string }) {
+function MockTopbar() {
   return (
     <div className="mock-topbar">
       <span className="mock-logo">Assets</span>
@@ -105,7 +105,7 @@ function AddPropertyMock() {
     <div className="mock-app">
       <MockSidebar activeIndex={2} />
       <div className="mock-main">
-        <MockTopbar subtitle="" />
+        <MockTopbar  />
         <div className="mock-welcome">Welcome back, chase</div>
         <div className="mock-panel-title">Add New Property</div>
         <div style={{ display: "flex", gap: 16 }}>
@@ -140,7 +140,7 @@ function PropertyDetailMock() {
     <div className="mock-app">
       <MockSidebar activeIndex={2} />
       <div className="mock-main">
-        <MockTopbar subtitle="" />
+        <MockTopbar  />
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <span style={{ color: "var(--accent)", fontSize: 11 }}>●</span>
           <span style={{ fontSize: 12, fontWeight: 700, color: "var(--text-primary)" }}>Elf House</span>
@@ -197,7 +197,7 @@ function DashboardMock() {
     <div className="mock-app">
       <MockSidebar activeIndex={1} />
       <div className="mock-main">
-        <MockTopbar subtitle="" />
+        <MockTopbar  />
         <div className="mock-welcome">Welcome back, chase — here's what's happening today.</div>
 
         <div style={{ display: "flex", gap: 8 }}>
