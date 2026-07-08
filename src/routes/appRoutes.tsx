@@ -1,8 +1,7 @@
 // src/routes/appRoutes.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
-// import { LandingPage } from '@/pages/LandingPage';
-import { SignInPage } from "@/pages/LoginPage";
+ import { SignInPage } from "@/pages/LoginPage";
 import { SignUpPage } from "@/pages/RegisterPage";
 import DashboardPage from "@/pages/DashboardPage";
 import ProfilePage from "@/pages/ProfilePage";
@@ -16,16 +15,15 @@ import NotFoundPage from "@/pages/NotFoundPage";
 import SingleSettlementsPage from "@/features/settlements/pages/SingleSettlementsPage";
 import { AppLayout } from "@/layouts/appLayout";
 import { AuthLayout } from "@/layouts/authLayout";
+import { LandingPage } from "@/pages/LandingPage";
 
 export const AppRoutes = () => {
   return (
     <Routes>
       {/* Public Routes (Auth Layout) */}
       <Route element={<AuthLayout />}>
-        {/* <Route path="/" element={<LandingPage />} /> */}
-        <Route path="/" element={<SignInPage />} />
-        <Route path="/login" element={<SignInPage />} />
-
+        <Route path="/" element={<LandingPage />} />
+         <Route path="/login" element={<SignInPage />} />
         <Route path="/register" element={<SignUpPage />} />
       </Route>
 

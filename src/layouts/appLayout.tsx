@@ -9,7 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { DesktopHeader, MobileHeader } from "@/components/ui/layout/Header";
+import {  DesktopNavbar, MobileNavbar } from "@/components/ui/layout/navs";
 import { MobileMenu } from "@/components/ui/layout/MobileMenu";
 import { DesktopSidebar } from "@/components/ui/layout/DesktopSidebar";
  import { useLogout } from "@/hooks/useAuth";
@@ -116,10 +116,10 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
     {/* Content Container */}
     <div className="relative min-h-[100svh] sm:p-4">
       {/* Desktop Header */}
-      <DesktopHeader />
+      <DesktopNavbar />
       
       {/* Mobile Header */}
-      <MobileHeader
+      <MobileNavbar
         isMobileMenuOpen={isMobileMenuOpen}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
       />

@@ -98,7 +98,7 @@ apiClient.interceptors.response.use(
           // Unauthorized - redirect to login
           console.warn("🔒 Unauthorized - Redirecting to login");
           // Clear any auth state and redirect
-          window.location.href = "/login";
+        //   window.location.href = "/login";
           break;
 
         case 403:

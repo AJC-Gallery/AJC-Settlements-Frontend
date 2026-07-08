@@ -1,0 +1,412 @@
+/* ==========================================================
+   HOW IT WORKS — DESIGN TOKENS
+   Scoped to .hiws-section so it can't leak into other parts
+   of the landing page that use a different design system.
+   ========================================================== */
+
+.hiws-section {
+  --bg-primary: #04120c;
+  --bg-secondary: #071811;
+
+  --text-primary: #f5fbf7;
+  --text-secondary: #9fb5aa;
+  --text-muted: #5f7669;
+
+  --accent: #2fe6a7;
+  --accent-light: #63ffd0;
+  --accent-dark: #1dbb82;
+
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-bg-soft: rgba(255, 255, 255, 0.008);
+  --glass-border: rgba(255, 255, 255, 0.045);
+  /* --glass-highlight: rgba(255, 255, 255, 0.07); */
+  --glass-blur: 22px;
+
+  --mock-bg: rgba(9, 28, 20, 0.55);
+  --mock-border: rgba(255, 255, 255, 0.05);
+  --mock-input-bg: rgba(255, 255, 255, 0.035);
+  --mock-input-border: rgba(255, 255, 255, 0.07);
+
+  --glow-dashboard: 0 0 140px rgba(47, 230, 167, 0.14);
+  /* --shadow-panel: 0 30px 70px rgba(0, 0, 0, 0.55);
+  --shadow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.06); */
+
+  --radius-card: 34px;
+  --radius-panel: 22px;
+  --radius-inner: 12px;
+
+  position: relative;
+  /* background: radial-gradient(120% 100% at 50% 0%, #0a2018 0%, #04120c 55%, #030d09 100%); */
+  /* padding: 130px 24px 150px; */
+  overflow: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* faint background doodle/grid texture — barely visible, per concept */
+.hiws-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.hiws-container {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ----------------------------------------------------------
+   ROW — the glass card that wraps each step
+   ---------------------------------------------------------- */
+.hiws-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  padding: 64px 72px;
+  border-radius: var(--radius-card);
+  background: linear-gradient(180deg, var(--glass-bg), var(--glass-bg-soft));
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  /* box-shadow: var(--shadow-panel), var(--shadow-inner); */
+  overflow: hidden;
+}
+
+.hiws-row.hiws-reverse {
+  flex-direction: row-reverse;
+}
+
+/* subtle top highlight sheen, like light hitting glass */
+.hiws-row::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-highlight), transparent);
+}
+
+/* ----------------------------------------------------------
+   TEXT COLUMN
+   ---------------------------------------------------------- */
+.hiws-text {
+  position: relative;
+  flex: 0 0 320px;
+  z-index: 1;
+}
+
+.hiws-ghost-number {
+  position: absolute;
+  top: -46px;
+  left: -6px;
+  font-size: 150px;
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+  opacity: 0.045;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.04);
+  user-select: none;
+  z-index: -1;
+}
+
+.hiws-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px rgba(47, 230, 167, 0.35);
+}
+
+.hiws-title {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+}
+
+.hiws-desc {
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  max-width: 300px;
+  margin: 0;
+}
+
+/* ----------------------------------------------------------
+   VISUAL COLUMN — dashboard shell + glow
+   ---------------------------------------------------------- */
+.hiws-visual {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  z-index: 1;
+}
+
+.hiws-dashboard-glow {
+  position: absolute;
+  inset: -50px;
+  background: radial-gradient(circle, rgba(47, 230, 167, 0.16), transparent 70%);
+  filter: blur(35px);
+  z-index: -1;
+}
+
+.hiws-dashboard-shell {
+  position: relative;
+  border-radius: var(--radius-panel);
+  padding: 2px;
+  background: rgba(11, 35, 24, 0.28);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  box-shadow: var(--glow-dashboard), 0 30px 70px rgba(0, 0, 0, 0.45);
+}
+
+/* ==========================================================
+   MOCK APP — recreated mini dashboard UI (not a screenshot)
+   ========================================================== */
+.mock-app {
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(6, 20, 14, 0.9), rgba(4, 15, 10, 0.95));
+  border: 1px solid var(--mock-border);
+  min-height: 300px;
+}
+
+.mock-sidebar {
+  width: 46px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 0;
+  background: rgba(255, 255, 255, 0.015);
+  border-right: 1px solid var(--mock-border);
+}
+
+.mock-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.mock-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mock-icon.active {
+  background: rgba(47, 230, 167, 0.14);
+  color: var(--accent-light);
+  box-shadow: 0 0 16px rgba(47, 230, 167, 0.35);
+}
+
+.mock-icon.avatar {
+  margin-top: auto;
+  background: linear-gradient(135deg, #3a6b57, #1c3d30);
+  color: var(--text-primary);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.mock-main {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mock-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--mock-border);
+}
+
+.mock-logo {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+
+.mock-topnav {
+  display: flex;
+  gap: 16px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.mock-welcome {
+  font-size: 9.5px;
+  color: var(--text-muted);
+}
+
+.mock-panel-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.mock-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.mock-input {
+  background: var(--mock-input-bg);
+  border: 1px solid var(--mock-input-border);
+  border-radius: var(--radius-inner);
+  padding: 8px 12px;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+.mock-photo {
+  border-radius: var(--radius-inner);
+  background: linear-gradient(135deg, #8a2c5a 0%, #b3436f 35%, #6e2647 70%, #451c34 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.mock-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 2px,
+    transparent 2px,
+    transparent 10px
+  );
+}
+
+.mock-btn {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  cursor: default;
+}
+
+.mock-btn.primary {
+  background: linear-gradient(180deg, var(--accent-light), var(--accent-dark));
+  color: #04160f;
+  box-shadow: 0 0 18px rgba(47, 230, 167, 0.4);
+}
+
+.mock-btn.ghost {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--mock-input-border);
+  color: var(--text-secondary);
+}
+
+.mock-btn.danger {
+  background: rgba(220, 90, 90, 0.12);
+  border-color: rgba(220, 90, 90, 0.25);
+  color: #e08888;
+}
+
+.mock-divider {
+  height: 1px;
+  background: var(--mock-border);
+}
+
+.mock-stat {
+  flex: 1;
+  background: var(--mock-input-bg);
+  border: 1px solid var(--mock-input-border);
+  border-radius: var(--radius-inner);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mock-stat-label {
+  font-size: 8px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mock-stat-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mock-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.mock-recent-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.mock-recent-name {
+  font-size: 9.5px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.mock-recent-loc {
+  font-size: 8px;
+  color: var(--text-muted);
+}
+
+/* ----------------------------------------------------------
+   RESPONSIVE
+   ---------------------------------------------------------- */
+@media (max-width: 900px) {
+  .hiws-row,
+  .hiws-row.hiws-reverse {
+    flex-direction: column;
+    padding: 40px 28px;
+    gap: 36px;
+  }
+  .hiws-text {
+    flex: none;
+    max-width: 100%;
+  }
+  .hiws-desc {
+    max-width: 100%;
+  }
+  .hiws-ghost-number {
+    font-size: 100px;
+    top: -30px;
+  }
+}

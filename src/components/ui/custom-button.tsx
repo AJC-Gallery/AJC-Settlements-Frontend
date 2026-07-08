@@ -3,18 +3,22 @@ import React from "react";
 export interface CustomGlassComponentProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
-  variant?:
-    | "default"
-    | "primary"
-    | "success"
-    | "danger"
-    | "warning"
-    | "outline"
-    | "ghost"
-    | "gradient"
-    | "solid"
-    | "dark"
-    | "dashed";
+ variant?:
+  | "default"
+  | "primary"
+  | "success"
+  | "danger"
+  | "warning"
+  | "outline"
+  | "solid"
+  | "dark"
+  | "dashed"
+
+  // Landing tokens
+  | "navGhost"
+  | "navPrimary"
+  | "heroPrimary"
+  | "heroSecondary";
   size?: "sm" | "md" | "lg" | "xl";
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
@@ -45,7 +49,7 @@ const CustomGlassButton: React.FC<CustomGlassComponentProps> = ({
     relative overflow-hidden
     font-medium transition-all duration-300
     backdrop-blur-md
-    ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:scale-[1.02] active:scale-[0.98]"}
+    ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:translate-y-[-1px] active:translate-y-[1px] active:scale-[0.99]"}
     ${fullWidth ? "w-full" : "inline-flex"}
     items-center justify-center gap-2
   `;
@@ -122,18 +126,14 @@ const CustomGlassButton: React.FC<CustomGlassComponentProps> = ({
       hover:bg-white/10 hover:border-white/60
       shadow-lg shadow-black/5
     `,
-    ghost: `
-      bg-transparent border border-transparent
-      text-white/90
-      hover:bg-white/10 hover:border-white/20
-    `,
-    gradient: `
-      bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-blue-500/20
-      border border-white/20
-      text-white
-      hover:from-purple-500/30 hover:via-pink-500/30 hover:to-blue-500/30
-      shadow-lg shadow-purple-500/10
-    `,
+   
+    // gradient: `
+    //   bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-blue-500/20
+    //   border border-white/20
+    //   text-white
+    //   hover:from-purple-500/30 hover:via-pink-500/30 hover:to-blue-500/30
+    //   shadow-lg shadow-purple-500/10
+    // `,
     solid: `
       bg-white/90 border border-white
       text-gray-900
@@ -153,6 +153,62 @@ const CustomGlassButton: React.FC<CustomGlassComponentProps> = ({
       hover:bg-white/15 hover:border-white/80
       shadow-lg shadow-black/5
     `,
+
+
+
+	navGhost: `
+  bg-white/[0.03]
+  backdrop-blur-xl
+  border border-white/[0.08]
+  text-white/90
+
+  shadow-[0_1px_10px_rgba(0,0,0,0.35)]
+  hover:bg-white/[0.06]
+  hover:border-white/[0.12]
+`,
+
+
+
+navPrimary: `
+  bg-[linear-gradient(180deg,rgba(63,214,153,0.22)_0%,rgba(24,140,99,0.18)_100%)]
+  border border-emerald-300/25
+  backdrop-blur-xl
+
+  text-white
+
+  shadow-[0_0_18px_rgba(34,197,94,0.18)]
+
+  hover:border-emerald-200/35
+  hover:shadow-[0_0_30px_rgba(34,197,94,0.28)]
+`,
+
+heroPrimary: `
+  relative
+  text-white
+  backdrop-blur-xl
+  border border-[#4EF6C8]/30
+  bg-[linear-gradient(135deg,rgba(95,255,210,0.10)_0%,rgba(70,235,180,0.18)_35%,rgba(46,198,146,0.42)_70%,rgba(32,170,123,0.65)_100%)]
+  shadow-[0_0_18px_rgba(52,211,153,0.18),inset_0_1px_0_rgba(255,255,255,0.12)]
+  hover:border-[#66FFD4]/45
+  hover:brightness-105
+  hover:shadow-[0_0_28px_rgba(52,211,153,0.28),inset_0_1px_0_rgba(255,255,255,0.18)]
+  active:brightness-95
+`,
+
+
+heroSecondary: `
+  bg-white/[0.02]
+  backdrop-blur-xl
+  border border-white/[0.12]
+
+  text-white
+
+  shadow-[0_4px_20px_rgba(0,0,0,0.25)]
+
+  hover:bg-white/[0.05]
+  hover:border-white/[0.18]
+`,
+    
   };
 
   // Wrapper for icon to control size

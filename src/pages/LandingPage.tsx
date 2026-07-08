@@ -1,270 +1,200 @@
 // src/pages/HomePage.tsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, TrendingUp, Brain, BarChart3, Shield, Zap, Users, CheckCircle, Star } from 'lucide-react';
-import { useCurrentUser } from '@/hooks/useAuth';
-import logo1 from '../assets/logo1.png';
+import React from "react";
 
+import PropertyTypesSection from "@/features/landingPage/propertyTypeSection";
+import HowItWorksSection from "@/features/landingPage/howItWorksSection";
+import PricingSection from "@/features/landingPage/pricingSection";
+import FooterSection from "@/features/landingPage/footerSection";
+import HeroSection from "@/features/landingPage/heroSection";
+import NavSection from "@/features/landingPage/navSection";
 export const LandingPage: React.FC = () => {
-  const { data: user, isSuccess } = useCurrentUser();
-  const isAuthenticated = isSuccess && !!user;
+	return (
+		<div className="relative min-h-screen overflow-hidden bg-[#04120c] px-4 py-2 space-y-42 sm:px-6 lg:px-7">
+			{/* Noise texture overlay */}
+			<div
+				className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
+				style={{
+					backgroundImage:
+						"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+				}}
+			/>
 
-  const features = [
-    {
-      icon: <Brain className="w-12 h-12 text-blue-600" />,
-      title: "Intelligent Inventory Optimization",
-      description: "Sophisticated algorithms analyze component lifecycle patterns, predictive maintenance requirements, and optimize inventory allocation for maximum operational efficiency."
-    },
-    {
-      icon: <BarChart3 className="w-12 h-12 text-blue-600" />,
-      title: "Real-Time Enterprise Analytics",
-      description: "Access comprehensive real-time data intelligence across all facilities with advanced forecasting and automated supply chain notifications."
-    },
-    {
-      icon: <Shield className="w-12 h-12 text-blue-600" />,
-      title: "Premium Quality Assurance",
-      description: "Industry-leading quality control protocols with comprehensive certification tracking and warranty management for all automotive solutions."
-    },
-    {
-      icon: <Zap className="w-12 h-12 text-blue-600" />,
-      title: "Advanced Business Intelligence",
-      description: "Enterprise-grade reporting suite featuring comprehensive analytics, customer lifecycle insights, and performance optimization metrics."
-    }
-  ];
+			{/* Ambient background glow */}
+			<div className="pointer-events-none absolute top-0 right-0 -z-10 h-[900px] w-[900px] bg-emerald-500/10 blur-[200px]" />
 
-  const benefits = [
-    "Optimize operational costs through intelligent inventory management systems",
-    "Streamline processes with automated enterprise-grade notifications",
-    "Access comprehensive automotive solutions database and certification tracking",
-    "Maintain continuous 24/7 inventory monitoring with predictive analytics"
-  ];
+			{/* Navigation */}
+			<div className="relative z-20">
+				<NavSection />
+			</div>
+			<div className="relative z-10">
+				<HeroSection />
+			</div>
+			<div className="relative z-10">
+				<PropertyTypesSection />
+			</div>
+			<div className="relative z-10">
+				<HowItWorksSection />
+			</div>
+			<div className="relative z-10">
+				<PricingSection />
+			</div>
 
-  const stats = [
-    { label: "Brands", value: "15+" },
-    { label: "Available goods", value: "2000+" },
-    { label: "Durability", value: "95%" },
-    { label: "Stations", value: "10+" }
-  ];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <img src={logo1} alt="AJC Gallery" className="h-10 w-auto" />
-              <span className="ml-2 text-xl font-bold text-gray-900">AJC Gallery</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              {isAuthenticated ? (
-                <>
-                  <span className="text-gray-700">Welcome back, {user?.firstName}!</span>
-                  <Link
-                    to="/dashboard"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/sign-in"
-                    className="px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    to="/sign-up"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Get Started
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 bg-blue-100 rounded-full mb-6">
-              <Star className="w-4 h-4 text-blue-600 mr-2" />
-              <span className="text-sm font-medium text-blue-600">
-                Advanced Automotive Solutions Platform
-              </span>
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              Premium Automotive Solutions
-              <br />
-              <span className="text-blue-600">Enterprise Grade Excellence</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Experience comprehensive enterprise solutions for premium automotive components including performance tyres, 
-              advanced battery systems, precision-engineered tubes, and professional-grade accessories with sophisticated 
-              inventory management and analytical reporting capabilities.
-            </p>
-            <div className="flex justify-center space-x-4">
-              {isAuthenticated ? (
-                <Link
-                  to="/dashboard"
-                  className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
-                >
-                  Access Dashboard
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-              ) : (
-                <>
-                  <Link
-                    to="/sign-up"
-                    className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
-                  >
-                    Start Building Now
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Link>
-                  <Link
-                    to="/sign-in"
-                    className="px-8 py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-                  >
-                    Sign In
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-2">{stat.value}</div>
-                <div className="text-gray-600">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Background decorations */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-          <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        </div>
-      </div>
-
-      {/* Features Section */}
-      <div className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">What Do We Offer?</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Discover an extensive portfolio of premium automotive solutions including performance tyres, 
-              advanced battery technologies, precision-engineered components, and professional-grade accessories - 
-              all centralized within the AJC Gallery ecosystem.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="p-8 bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                <div className="mb-4">{feature.icon}</div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Benefits Section */}
-      <div className="py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold mb-6">Transform Your Automotive Enterprise</h2>
-              <p className="text-blue-100 mb-8">
-                Join leading automotive enterprises worldwide who have revolutionized their operations through 
-                our advanced inventory management solutions. Our platform seamlessly integrates cutting-edge 
-                technology with intuitive enterprise architecture to optimize your entire supply chain ecosystem.
-              </p>
-              <div className="space-y-4">
-                {benefits.map((benefit, index) => (
-                  <div key={index} className="flex items-start">
-                    <CheckCircle className="w-6 h-6 text-green-300 mr-3 flex-shrink-0 mt-1" />
-                    <span className="text-blue-100">{benefit}</span>
-                  </div>
-                ))}
-              </div>
-              {!isAuthenticated && (
-                <Link
-                  to="/sign-up"
-                  className="inline-block mt-8 px-8 py-4 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-semibold"
-                >
-                  Get Started Today
-                </Link>
-              )}
-            </div>
-            <div className="grid grid-cols-1 gap-6">
-              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl">
-                <TrendingUp className="w-8 h-8 text-green-300 mb-3" />
-                <h4 className="text-xl font-bold mb-2">Revenue Optimization</h4>
-                <p className="text-blue-100">+24.5% quarterly growth</p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl">
-                <Users className="w-8 h-8 text-green-300 mb-3" />
-                <h4 className="text-xl font-bold mb-2">Enterprise Network</h4>
-                <p className="text-blue-100">Global supplier integration</p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl">
-                <Shield className="w-8 h-8 text-green-300 mb-3" />
-                <h4 className="text-xl font-bold mb-2">Excellence Standards</h4>
-                <p className="text-blue-100">ISO-certified solutions</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* CTA Section */}
-      {!isAuthenticated && (
-        <div className="py-20 bg-gray-900 text-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-4xl font-bold mb-6">
-              Ready to Elevate Your Automotive Enterprise?
-            </h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Partner with industry leaders and experience the future of intelligent automotive solutions 
-              management through our comprehensive enterprise platform.
-            </p>
-            <Link
-              to="/sign-up"
-              className="inline-block px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
-            >
-              Create Free Account
-            </Link>
-            <p className="text-gray-400 mt-4 text-sm">
-              No credit card required • Free forever
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <img src={logo1} alt="AJC Gallery" className="h-8 w-auto" />
-              <span className="ml-2 text-lg font-bold">AJC Gallery</span>
-            </div>
-            <p className="text-gray-400 text-sm">
-              © 2025 AJC Gallery. All rights reserved. Your strategic automotive solutions partner.
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
+			<FooterSection />
+		</div>
+	);
 };
+
+// // src/pages/HomePage.tsx
+// import React from "react";
+// import { useCurrentUser } from "@/hooks/useAuth";
+// import Logo from "@/assets/logo2.png";
+// import HeroImage from "@/assets/demo-page.png";
+
+// import { Play } from "lucide-react";
+// import CustomGlassButton from "@/components/ui/custom-button";
+
+// export const LandingPage: React.FC = () => {
+// 	const { data: user, isSuccess } = useCurrentUser();
+// 	const isAuthenticated = isSuccess && !!user;
+
+// 	return (
+// 		<div className="relative min-h-screen px-7 py-2 overflow-hidden bg-[#04120c]">
+// 			{/* Noise texture overlay — sits over the whole page background */}
+// 			<div
+// 				className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
+// 				style={{
+// 					backgroundImage:
+// 						"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+// 				}}
+// 			/>
+
+// 			{/* Ambient background glow, page-wide, subtle */}
+// 			<div className="pointer-events-none absolute top-0 right-0 w-[900px] h-[900px] bg-emerald-500/10 blur-[200px] -z-10" />
+
+// 			{/* Navigation */}
+// 			<nav className="relative z-20 flex justify-between items-center px-8 pt-4">
+// 				<div className="w-24 h-24 shrink-0">
+// 					<img
+// 						src={Logo}
+// 						alt="AJC Gallery"
+// 						className="w-full h-full object-contain"
+// 					/>
+// 				</div>
+
+// 				<div className="flex gap-10 items-center">
+// 					<a href="#" className="text-white/80 hover:text-white transition-colors text-sm">
+// 						Features
+// 					</a>
+// 					<a href="#" className="text-white/80 hover:text-white transition-colors text-sm">
+// 						Pricing
+// 					</a>
+// 					<a href="#" className="text-white/80 hover:text-white transition-colors text-sm">
+// 						About
+// 					</a>
+// 					<a href="#" className="text-white/80 hover:text-white transition-colors text-sm">
+// 						Contact
+// 					</a>
+// 				</div>
+
+// 				<div className="flex gap-3 items-center">
+// 					<CustomGlassButton variant="navGhost" size="sm">
+// 						Login
+// 					</CustomGlassButton>
+// 					<CustomGlassButton variant="navPrimary" size="sm">
+// 						Get Started
+// 					</CustomGlassButton>
+// 				</div>
+// 			</nav>
+
+// 			{/* Hero */}
+// 			<section className="relative z-10 px-8 mt-20 flex items-center gap-16">
+// 				{/* Left: copy + CTAs */}
+// 				<div className="flex-1 max-w-lg">
+// 					<h1 className="text-5xl font-bold text-white leading-tight tracking-tight">
+// 						The all-in-one workspace for modern landlords.
+// 					</h1>
+// 					<p className="mt-5 text-white/60 text-lg leading-relaxed">
+// 						Manage your properties, track occupancy, organize settlements
+// 						and prepare for the future of property management.
+// 					</p>
+
+// 					<div className="flex gap-3 mt-8">
+// 						<CustomGlassButton variant="heroPrimary" size="md">
+// 							Start Free →
+// 						</CustomGlassButton>
+// 						<CustomGlassButton
+// 							variant="heroSecondary"
+// 							size="md"
+// 							icon={<Play />}
+// 							iconPosition="left"
+// 						>
+// 							Watch Demo
+// 						</CustomGlassButton>
+// 					</div>
+
+// 					<div className="flex gap-6 mt-10 text-sm text-white/50">
+// 						<span>Secure & Reliable</span>
+// 						<span>Designed for Landlords</span>
+// 						<span>Works Anywhere</span>
+// 					</div>
+// 				</div>
+
+// 				{/* Right: dashboard mockup, bleeds past edge */}
+// 				<div className="flex-1 relative">
+// 					{/* Glow layer — emanates from beneath the card */}
+// 					<div
+// 						className="
+// 							absolute inset-0 -z-10
+// 							bg-emerald-500/40
+// 							blur-[120px]
+// 							scale-90
+// 							translate-y-10
+// 						"
+// 					/>
+
+// 					{/* Back layer — creates the stacked-sheet depth illusion */}
+// 					<div
+// 						className="
+// 							absolute inset-0 z-0
+// 							rounded-2xl border border-white/5
+// 							bg-black/20
+// 							[transform:perspective(1400px)_rotateY(-14deg)_rotateX(4deg)_translateZ(-40px)]
+// 							translate-x-12 translate-y-4
+// 							opacity-40
+// 						"
+// 					/>
+// 					{/* Second back layer — even further back, barely visible, adds thickness */}
+// 					<div
+// 						className="
+// 							absolute inset-0 -z-[1]
+// 							rounded-2xl border border-white/5
+// 							bg-black/10
+// 							[transform:perspective(1400px)_rotateY(-14deg)_rotateX(4deg)_translateZ(-70px)]
+// 							translate-x-16 translate-y-7
+// 							opacity-20
+// 						"
+// 					/>
+
+// 					{/* Main dashboard card */}
+// 					<div
+// 						className="
+// 							relative z-10
+// 							w-[90%] rounded-2xl border border-white/10
+// 							bg-black/30 backdrop-blur-xl
+// 							shadow-[0_40px_100px_rgba(16,185,129,0.25)]
+// 							[transform:perspective(1400px)_rotateY(-14deg)_rotateX(4deg)]
+// 							translate-x-8
+// 							overflow-hidden
+// 						"
+// 					>
+// 						<img
+// 							src={HeroImage}
+// 							alt="Dashboard mockup"
+// 							className="w-full h-full object-cover rounded-2xl"
+// 						/>
+// 					</div>
+// 				</div>
+// 			</section>
+// 		</div>
+// 	);
+// };

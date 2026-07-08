@@ -7,7 +7,7 @@ interface MobileHeaderProps {
   setIsMobileMenuOpen: (value: boolean) => void;
 }
 
-export const MobileHeader = ({ 
+export const MobileNavbar = ({ 
   isMobileMenuOpen, 
   setIsMobileMenuOpen 
 }: MobileHeaderProps) =>{ 
@@ -39,7 +39,7 @@ export const MobileHeader = ({
   </header>
 );}
 
-export const DesktopHeader = () =>{
+export const DesktopNavbar = () =>{
         const navigate = useNavigate();
  const handleTabtClick = () => {
     navigate(`/contact-info`);
