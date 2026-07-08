@@ -1,8 +1,11 @@
 // src/features/auth/components/SignInForm.tsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useLogin } from "@/hooks";
 import { Spinner } from "@/components/ui/spinner";
+import CustomGlassButton from "@/components/ui/custom-button";
+import GlassCard from "@/components/ui/glassCard";
 import type { LoginRequest } from "@/features/auth/types";
 
 interface SignInFormProps {
@@ -11,6 +14,7 @@ interface SignInFormProps {
 
 export const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
   const { mutate: login, isPending, error } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState<LoginRequest>({
     usernameOrEmail: "",
@@ -21,9 +25,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
     Partial<Record<keyof LoginRequest, string>>
   >({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -51,98 +53,130 @@ export const SignInForm: React.FC<SignInFormProps> = ({ onSuccess }) => {
     null;
 
   return (
-    <div className="w-full max-w-md">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Sign In</h1>
-        <p className="text-gray-600 mt-2">Access your account</p>
-      </div>
-
-      {/* API Error Display */}
-      {apiError && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-600">{apiError}</p>
+    <div className="relative z-10 w-full max-w-md">
+      <GlassCard variant="panel" className="!px-8 !py-9 sm:!px-10 sm:!py-10">
+        <div className="mb-7">
+          <h1 className="text-2xl font-bold text-white">Welcome back</h1>
+          <p className="mt-1.5 text-sm text-white/55">
+            Sign in to continue to your account
+          </p>
         </div>
-      )}
 
-      {/* Login Form */}
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg">
-        {/* Username / Email Field */}
-        <div className="mb-4">
-          <label htmlFor="usernameOrEmail" className="block text-sm font-medium text-gray-700 mb-2">
-            Email or Username
-          </label>
-          <input
-            type="text"
-            id="usernameOrEmail"
-            name="usernameOrEmail"
-            value={formData.usernameOrEmail}
-            onChange={handleChange}
-            className={`w-full px-4 py-2 border text-black rounded-lg focus:outline-none focus:ring-2 ${
-              validationErrors.usernameOrEmail
-                ? "border-red-300 focus:ring-red-500"
-                : "border-gray-300 focus:ring-blue-500"
-            }`}
-            placeholder="Enter your email or username"
+        {apiError && (
+          <div className="mb-5 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3">
+            <p className="text-sm text-red-300">{apiError}</p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          {/* Email / Username */}
+          <div>
+            <label
+              htmlFor="usernameOrEmail"
+              className="mb-2 block text-sm font-medium text-white/70"
+            >
+              Email or Username
+            </label>
+            <div className="relative">
+              <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
+              <input
+                type="text"
+                id="usernameOrEmail"
+                name="usernameOrEmail"
+                value={formData.usernameOrEmail}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                disabled={isPending}
+                className={`w-full rounded-xl border bg-white/[0.03] py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-white/30 transition-colors focus:outline-none focus:ring-2 ${
+                  validationErrors.usernameOrEmail
+                    ? "border-red-400/30 focus:ring-red-400/30"
+                    : "border-white/10 focus:border-emerald-400/40 focus:ring-emerald-400/20"
+                }`}
+              />
+            </div>
+            {validationErrors.usernameOrEmail && (
+              <p className="mt-1.5 text-xs text-red-300">
+                {validationErrors.usernameOrEmail}
+              </p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <div className="mb-2 flex items-center justify-between">
+              <label htmlFor="password" className="text-sm font-medium text-white/70">
+                Password
+              </label>
+              <Link
+                to="/forgot-password"
+                className="text-xs font-medium text-emerald-300 hover:text-emerald-200"
+              >
+                Forgot password?
+              </Link>
+            </div>
+            <div className="relative">
+              <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                disabled={isPending}
+                className={`w-full rounded-xl border bg-white/[0.03] py-2.5 pl-10 pr-11 text-sm text-white placeholder:text-white/30 transition-colors focus:outline-none focus:ring-2 ${
+                  validationErrors.password
+                    ? "border-red-400/30 focus:ring-red-400/30"
+                    : "border-white/10 focus:border-emerald-400/40 focus:ring-emerald-400/20"
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/35 hover:text-white/60"
+                tabIndex={-1}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+            {validationErrors.password && (
+              <p className="mt-1.5 text-xs text-red-300">{validationErrors.password}</p>
+            )}
+          </div>
+
+          {/* Submit */}
+          <CustomGlassButton
+            type="submit"
+            variant="heroPrimary"
+            size="md"
             disabled={isPending}
-          />
-          {validationErrors.usernameOrEmail && (
-            <p className="mt-1 text-sm text-red-600">{validationErrors.usernameOrEmail}</p>
-          )}
-        </div>
-
-        {/* Password Field */}
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className={`w-full px-4 py-2 border text-black rounded-lg focus:outline-none focus:ring-2 ${
-              validationErrors.password
-                ? "border-red-300 focus:ring-red-500"
-                : "border-gray-300 focus:ring-blue-500"
-            }`}
-            placeholder="Enter your password"
-            disabled={isPending}
-          />
-          {validationErrors.password && (
-            <p className="mt-1 text-sm text-red-600">{validationErrors.password}</p>
-          )}
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isPending}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          {isPending ? (
-            <span className="flex items-center justify-center">
-              <Spinner size="sm" />
-              <span className="ml-2">Signing in...</span>
-            </span>
-          ) : (
-            "Sign In"
-          )}
-        </button>
+            className="mt-1 w-full"
+          >
+            {isPending ? (
+              <span className="flex items-center justify-center gap-2">
+                <Spinner size="sm" />
+                Signing in...
+              </span>
+            ) : (
+              "Sign In"
+            )}
+          </CustomGlassButton>
+        </form>
 
         {/* Links */}
-        <div className="mt-4 text-center space-y-2">
-          <p className="text-sm text-gray-600">
+        <div className="mt-6 space-y-3 text-center">
+          <p className="text-sm text-white/55">
             Don't have an account?{" "}
-            <Link to="/register" className="text-blue-600 hover:text-blue-800 font-medium">
+            <Link to="/register" className="font-medium text-emerald-300 hover:text-emerald-200">
               Sign up
             </Link>
           </p>
-          <Link to="/" className="block text-sm text-gray-500 hover:text-gray-700">
+          <Link to="/" className="block text-sm text-white/40 hover:text-white/60">
             Back to Home
           </Link>
         </div>
-      </form>
+      </GlassCard>
     </div>
   );
 };

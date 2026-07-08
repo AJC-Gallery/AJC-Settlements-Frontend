@@ -9,7 +9,7 @@ import HeroSection from "@/features/landingPage/heroSection";
 import NavSection from "@/features/landingPage/navSection";
 export const LandingPage: React.FC = () => {
 	return (
-		<div className="relative min-h-screen overflow-hidden bg-[#04120c] px-4 py-2 space-y-42 sm:px-6 lg:px-7">
+		<div className="relative min-h-screen overflow-hidden bg-[#04120c] px-4 py-2 space-y-16 sm:px-6 lg:px-7">
 			{/* Noise texture overlay */}
 			<div
 				className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
@@ -22,25 +22,25 @@ export const LandingPage: React.FC = () => {
 			{/* Ambient background glow */}
 			<div className="pointer-events-none absolute top-0 right-0 -z-10 h-[900px] w-[900px] bg-emerald-500/10 blur-[200px]" />
 
-			{/* Navigation */}
-			<div className="relative z-20">
+				<div className="relative pb-8 z-20">
 				<NavSection />
 			</div>
-			<div className="relative z-10">
+			<div id="hero" className="relative py-8 z-10">
 				<HeroSection />
 			</div>
-			<div className="relative z-10">
+			<div id="features" className="relative py-8 z-10">
 				<PropertyTypesSection />
 			</div>
-			<div className="relative z-10">
+			<div id="how-it-works" className="relative py-8 z-10">
 				<HowItWorksSection />
 			</div>
-			<div className="relative z-10">
+			<div id="pricing" className="relative py-8 z-10">
 				<PricingSection />
 			</div>
 
-			<FooterSection />
-		</div>
+			<div id="contact">
+				<FooterSection />
+			</div></div>
 	);
 };
 

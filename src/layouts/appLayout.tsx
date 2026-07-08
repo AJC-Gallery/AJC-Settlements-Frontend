@@ -40,7 +40,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
  const handleNavigation = (path: string) => {
   if (path === "/logout") {
     logout(); // <-- trigger logout hook
-    navigate("/login"); // redirect user after logout
+    navigate("/"); // redirect user after logout
     return;
   }
 

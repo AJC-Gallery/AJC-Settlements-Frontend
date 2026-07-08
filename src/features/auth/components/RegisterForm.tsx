@@ -3,11 +3,20 @@ import { useRegister } from "@/hooks";
 import type { RegisterRequest } from "@/features/auth/types";
 import { Spinner } from "@/components/ui/spinner";
 import SelectField from "@/components/ui/selectField";
-import { useNavigate } from "react-router-dom";
+import CustomGlassButton from "@/components/ui/custom-button";
+import GlassCard from "@/components/ui/glassCard";
+import { useNavigate, Link } from "react-router-dom";
 
 interface SignUpFormProps {
   onSuccess?: () => void;
 }
+
+const inputClass = (hasError?: boolean) =>
+  `w-full rounded-xl border bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-white/30 transition-colors focus:outline-none focus:ring-2 ${
+    hasError
+      ? "border-red-400/30 focus:ring-red-400/30"
+      : "border-white/10 focus:border-emerald-400/40 focus:ring-emerald-400/20"
+  }`;
 
 export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
   const navigate = useNavigate();
@@ -60,7 +69,6 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
 
     register(formData, {
       onSuccess: () => {
-        // Use onSuccess callback if provided, otherwise redirect
         if (onSuccess) onSuccess();
         else navigate("/sign-in");
       },
@@ -77,241 +85,222 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
     }
   };
 
+  const apiError =
+    typeof error === "string" ? error : (error as any)?.message || null;
+
   return (
-    <div className="w-full max-w-md">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Create Account
-        </h1>
-        <p className="text-gray-600">Join us and start your journey today</p>
-      </div>
-
-      {/* API Error Display */}
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-600">
-            {typeof error === "string" ? error : error?.message || "Registration failed"}
+    <div className="relative z-10 w-full max-w-lg">
+      <GlassCard variant="panel" className="!px-8 !py-9 sm:!px-10 sm:!py-10">
+        <div className="mb-7">
+          <h1 className="text-2xl font-bold text-white">Create your account</h1>
+          <p className="mt-1.5 text-sm text-white/55">
+            Join Assets and start managing your properties
           </p>
         </div>
-      )}
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-lg text-black space-y-4"
-      >
-        {/* Email */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email *
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-lg text-black focus:outline-none focus:ring-2 ${
-              validationErrors.email
-                ? "border-red-300 focus:ring-red-500"
-                : "border-gray-300 focus:ring-blue-500"
-            }`}
-            disabled={isPending}
-          />
-          {validationErrors.email && (
-            <p className="mt-1 text-sm text-red-600">{validationErrors.email}</p>
-          )}
-        </div>
+        {apiError && (
+          <div className="mb-5 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3">
+            <p className="text-sm text-red-300">{apiError}</p>
+          </div>
+        )}
 
-        {/* Username */}
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-            Username *
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-lg text-black focus:outline-none focus:ring-2 ${
-              validationErrors.username
-                ? "border-red-300 focus:ring-red-500"
-                : "border-gray-300 focus:ring-blue-500"
-            }`}
-            disabled={isPending}
-          />
-          {validationErrors.username && (
-            <p className="mt-1 text-sm text-red-600">{validationErrors.username}</p>
-          )}
-        </div>
-
-        {/* First + Last Name */}
-        <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Email */}
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-              First Name *
+            <label htmlFor="email" className="mb-2 block text-sm font-medium text-white/70">
+              Email *
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="you@example.com"
+              className={inputClass(!!validationErrors.email)}
+              disabled={isPending}
+            />
+            {validationErrors.email && (
+              <p className="mt-1.5 text-xs text-red-300">{validationErrors.email}</p>
+            )}
+          </div>
+
+          {/* Username */}
+          <div>
+            <label htmlFor="username" className="mb-2 block text-sm font-medium text-white/70">
+              Username *
             </label>
             <input
               type="text"
-              id="firstName"
-              name="firstName"
-              value={formData.firstName}
+              id="username"
+              name="username"
+              value={formData.username}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg text-black focus:outline-none focus:ring-2 ${
-                validationErrors.firstName
-                  ? "border-red-300 focus:ring-red-500"
-                  : "border-gray-300 focus:ring-blue-500"
-              }`}
+              placeholder="Choose a username"
+              className={inputClass(!!validationErrors.username)}
               disabled={isPending}
             />
-            {validationErrors.firstName && (
-              <p className="mt-1 text-sm text-red-600">{validationErrors.firstName}</p>
+            {validationErrors.username && (
+              <p className="mt-1.5 text-xs text-red-300">{validationErrors.username}</p>
             )}
           </div>
+
+          {/* First + Last Name */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="firstName" className="mb-2 block text-sm font-medium text-white/70">
+                First Name *
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                className={inputClass(!!validationErrors.firstName)}
+                disabled={isPending}
+              />
+              {validationErrors.firstName && (
+                <p className="mt-1.5 text-xs text-red-300">{validationErrors.firstName}</p>
+              )}
+            </div>
+            <div>
+              <label htmlFor="lastName" className="mb-2 block text-sm font-medium text-white/70">
+                Last Name *
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                className={inputClass(!!validationErrors.lastName)}
+                disabled={isPending}
+              />
+              {validationErrors.lastName && (
+                <p className="mt-1.5 text-xs text-red-300">{validationErrors.lastName}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Other Name */}
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-              Last Name *
+            <label htmlFor="otherName" className="mb-2 block text-sm font-medium text-white/70">
+              Other Name (Optional)
             </label>
             <input
               type="text"
-              id="lastName"
-              name="lastName"
-              value={formData.lastName}
+              id="otherName"
+              name="otherName"
+              value={formData.otherName}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg text-black focus:outline-none focus:ring-2 ${
-                validationErrors.lastName
-                  ? "border-red-300 focus:ring-red-500"
-                  : "border-gray-300 focus:ring-blue-500"
-              }`}
+              className={inputClass()}
               disabled={isPending}
             />
-            {validationErrors.lastName && (
-              <p className="mt-1 text-sm text-red-600">{validationErrors.lastName}</p>
-            )}
           </div>
-        </div>
 
-        {/* Other Name */}
-        <div>
-          <label htmlFor="otherName" className="block text-sm font-medium text-gray-700 mb-1">
-            Other Name (Optional)
-          </label>
-          <input
-            type="text"
-            id="otherName"
-            name="otherName"
-            value={formData.otherName}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={isPending}
-          />
-        </div>
+          {/* Gender + Nationality */}
+          <div className="grid grid-cols-2 gap-4">
+            <SelectField
+              id="gender"
+              name="gender"
+              label="Gender"
+              required
+              value={formData.gender}
+              onChange={handleChange}
+              options={[
+                { label: "Male", value: "MALE" },
+                { label: "Female", value: "FEMALE" },
+                { label: "Other", value: "OTHER" },
+              ]}
+              disabled={isPending}
+            />
+            <div>
+              <label htmlFor="nationality" className="mb-2 block text-sm font-medium text-white/70">
+                Nationality *
+              </label>
+              <input
+                type="text"
+                id="nationality"
+                name="nationality"
+                value={formData.nationality}
+                onChange={handleChange}
+                className={inputClass(!!validationErrors.nationality)}
+                disabled={isPending}
+              />
+              {validationErrors.nationality && (
+                <p className="mt-1.5 text-xs text-red-300">{validationErrors.nationality}</p>
+              )}
+            </div>
+          </div>
 
-        {/* Gender + Nationality */}
-        <div className="grid grid-cols-2 gap-4">
-          <SelectField
-            id="gender"
-            name="gender"
-            label="Gender"
-            required
-            value={formData.gender}
-            onChange={handleChange}
-            options={[
-              { label: "Male", value: "MALE" },
-              { label: "Female", value: "FEMALE" },
-              { label: "Other", value: "OTHER" },
-            ]}
-            disabled={isPending}
-          />
+          {/* Password */}
           <div>
-            <label htmlFor="nationality" className="block text-sm font-medium text-gray-700 mb-1">
-              Nationality *
+            <label htmlFor="password" className="mb-2 block text-sm font-medium text-white/70">
+              Password *
             </label>
             <input
-              type="text"
-              id="nationality"
-              name="nationality"
-              value={formData.nationality}
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg text-black focus:outline-none focus:ring-2 ${
-                validationErrors.nationality
-                  ? "border-red-300 focus:ring-red-500"
-                  : "border-gray-300 focus:ring-blue-500"
-              }`}
+              placeholder="At least 8 characters"
+              className={inputClass(!!validationErrors.password)}
               disabled={isPending}
             />
-            {validationErrors.nationality && (
-              <p className="mt-1 text-sm text-red-600">{validationErrors.nationality}</p>
+            {validationErrors.password && (
+              <p className="mt-1.5 text-xs text-red-300">{validationErrors.password}</p>
             )}
           </div>
-        </div>
 
-        {/* Password */}
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Password *
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-lg text-black focus:outline-none focus:ring-2 ${
-              validationErrors.password
-                ? "border-red-300 focus:ring-red-500"
-                : "border-gray-300 focus:ring-blue-500"
-            }`}
+          {/* Confirm Password */}
+          <div>
+            <label htmlFor="confirmPassword" className="mb-2 block text-sm font-medium text-white/70">
+              Confirm Password *
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Re-enter your password"
+              className={inputClass()}
+              disabled={isPending}
+            />
+          </div>
+
+          {/* Submit */}
+          <CustomGlassButton
+            type="submit"
+            variant="heroPrimary"
+            size="md"
             disabled={isPending}
-          />
-          {validationErrors.password && (
-            <p className="mt-1 text-sm text-red-600">{validationErrors.password}</p>
-          )}
-        </div>
+            className="mt-2 w-full"
+          >
+            {isPending ? (
+              <span className="flex items-center justify-center gap-2">
+                <Spinner size="sm" />
+                Creating account...
+              </span>
+            ) : (
+              "Create Account"
+            )}
+          </CustomGlassButton>
+        </form>
 
-        {/* Confirm Password */}
-        <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-            Confirm Password *
-          </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={isPending}
-          />
-        </div>
-
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={isPending}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          {isPending ? (
-            <span className="flex items-center justify-center">
-              <Spinner size="sm" />
-              <span className="ml-2">Creating account...</span>
-            </span>
-          ) : (
-            "Create Account"
-          )}
-        </button>
-
-        <div className="mt-4 text-center space-y-2">
-          <p className="text-sm text-gray-600">
+        <div className="mt-6 space-y-3 text-center">
+          <p className="text-sm text-white/55">
             Already have an account?{" "}
-            <a href="/login" className="text-blue-600 hover:text-blue-800 font-medium">
+            <Link to="/login" className="font-medium text-emerald-300 hover:text-emerald-200">
               Sign in
-            </a>
+            </Link>
           </p>
-          <a href="/" className="block text-sm text-gray-500 hover:text-gray-700">
+          <Link to="/" className="block text-sm text-white/40 hover:text-white/60">
             Back to Home
-          </a>
+          </Link>
         </div>
-      </form>
+      </GlassCard>
     </div>
   );
 };

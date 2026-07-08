@@ -2,48 +2,37 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SignInForm } from '../features/auth/components';
+import Logo from '@/assets/logo2.png';
 
 export const SignInPage: React.FC = () => {
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 
-  const handleSignInSuccess = () => {
-    navigate('/dashboard');
-  };
+	const handleSignInSuccess = () => {
+		navigate('/dashboard');
+	};
 
-  return (
-    <div className="flex w-full min-h-[100svh]">
-      {/* Left side - Brand/Info section - Hidden on mobile */}
-      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-blue-900 via-black to-black items-center justify-center p-8 lg:p-12">
-        <div className="text-white text-center lg:text-left max-w-md">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-            Welcome Back
-          </h2>
-          <p className="text-green-100 text-lg mb-6">
-            Sign in to access your dashboard and manage your inventory.
-          </p>
-          <div>
-            <div className="flex items-center space-x-2 mb-3">
-              <div className="w-2 h-2 bg-green-300 rounded-full"></div>
-              <span className="text-green-100">Secure authentication</span>
-            </div>
-            <div className="flex items-center space-x-2 mb-3">
-              <div className="w-2 h-2 bg-green-300 rounded-full"></div>
-              <span className="text-green-100">
-                Instant access to dashboard
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-300 rounded-full"></div>
-              <span className="text-green-100">24/7 support available</span>
-            </div>
-          </div>
-        </div>
-      </div>
+	return (
+		<div className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden bg-[#04120c] px-4 py-10">
+			{/* Noise texture overlay */}
+			<div
+				className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
+				style={{
+					backgroundImage:
+						"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+				}}
+			/>
 
-      {/* Right side - Sign in form - Full width on mobile */}
-      <div className="w-full lg:flex-1 flex items-center justify-center p-6 lg:p-12 bg-gray-50">
-        <SignInForm onSuccess={handleSignInSuccess} />
-      </div>
-    </div>
-  );
+			{/* Ambient glow */}
+			<div className="pointer-events-none absolute top-0 right-0 -z-10 h-[900px] w-[900px] bg-emerald-500/10 blur-[200px]" />
+			<div className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[700px] w-[700px] bg-emerald-500/[0.06] blur-[180px]" />
+
+			{/* Logo */}
+			<div className="absolute left-6 top-6 flex items-center gap-2 sm:left-10 sm:top-8">
+				<img src={Logo} alt="Assets" className="h-9 w-9 object-contain" />
+				<span className="text-lg font-semibold text-white">Assets</span>
+			</div>
+
+			<SignInForm onSuccess={handleSignInSuccess} />
+		</div>
+	);
 };

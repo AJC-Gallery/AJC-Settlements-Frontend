@@ -1,11 +1,13 @@
 import CustomGlassButton from "@/components/ui/custom-button";
 import { Globe, Home, Play, ShieldCheck } from "lucide-react";
 import HeroImage from "@/assets/demo-page.png";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+	const navigate = useNavigate();
+
 	return (
-		<div className="  flex flex-col items-center gap-10 px-2 sm:px-4   lg:flex-row lg:items-center lg:gap-8 xl:gap-12 lg:px-8">
-			{/* Left: copy + CTAs */}
+		<div className="flex flex-col items-center gap-10 px-2 sm:px-4 lg:flex-row lg:items-center lg:gap-8 xl:gap-12 lg:px-8">
 			<div className="w-full text-center lg:flex-1 lg:max-w-sm lg:text-left xl:max-w-md 2xl:max-w-xl">
 				<h1 className="text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl lg:text-3xl xl:text-4xl 2xl:text-5xl">
 					The all-in-one workspace for modern landlords.
@@ -17,7 +19,11 @@ const HeroSection = () => {
 				</p>
 
 				<div className="mt-8 flex flex-wrap justify-center gap-3 lg:mt-6 lg:justify-start xl:mt-8">
-					<CustomGlassButton variant="heroPrimary" size="md">
+					<CustomGlassButton
+						variant="heroPrimary"
+						size="md"
+						onClick={() => navigate("/register")}
+					>
 						Start Free →
 					</CustomGlassButton>
 					<CustomGlassButton
